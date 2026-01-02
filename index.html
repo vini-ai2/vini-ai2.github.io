@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manasvini</title>
+
+  <!-- STYLES -->
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #e0e0e0;
+      background: #121212;
+      line-height: 1.6;
+    }
+
+    body.light {
+      background: #ffffff;
+      color: #111111;
+    }
+
+    body.light a {
+      color: #0070f3;
+    }
+
+    section {
+      padding: 60px 20px;
+      max-width: 880px;
+      margin: auto;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 0.4rem;
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-top: 2rem;
+      border-bottom: 1px solid #444;
+      padding-bottom: 6px;
+    }
+
+    p {
+      margin: 0.6rem 0;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    a {
+      color: #61dafb;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .muted {
+      color: #9ca3af;
+    }
+
+    /* NAVBAR */
+    .nav {
+      display: flex;
+      justify-content: center;
+      gap: 22px;
+      padding: 18px;
+      background: #111;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    body.light .nav {
+      background: #f2f2f2;
+    }
+
+    .nav a {
+      font-weight: 500;
+    }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-block;
+      padding: 8px 14px;
+      border: 1px solid #444;
+      border-radius: 6px;
+      margin-right: 10px;
+      margin-top: 12px;
+    }
+
+    body.light .btn {
+      border-color: #ccc;
+    }
+
+    /* TOGGLE BUTTON */
+    .toggleBtn {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      background: #444;
+      color: #fff;
+      padding: 8px 12px;
+      cursor: pointer;
+      border: none;
+      font-size: 0.9rem;
+      border-radius: 6px;
+      z-index: 20;
+    }
+
+    body.light .toggleBtn {
+      background: #ddd;
+      color: #111;
+    }
+  </style>
+</head>
+
+<body>
+
+<button class="toggleBtn" onclick="toggleMode()">Toggle Mode</button>
+
+<nav class="nav">
+  <a href="#about">About</a>
+  <a href="#projects">Work</a>
+  <a href="#writing">Writing</a>
+  <a href="#contact">Contact</a>
+</nav>
+
+<section id="hero">
+  <h1>Manasvini</h1>
+  <p class="muted">
+    AI & Data Science · ML systems · RAG · LLM experiments
+  </p>
+
+  <a class="btn" href="Manasvini_Kandikonda_Resume.pdf" target="_blank">
+    Resume 
+  </a>
+  <a class="btn" href="https://github.com/vini-ai2" target="_blank">
+    GitHub
+  </a>
+</section>
+
+<section id="about">
+  <h2>About</h2>
+  <p>
+    I build practical ML systems and explore where AI meets real-world constraints —
+    from retrieval-augmented pipelines to document intelligence and interpretability-focused tools.
+  </p>
+</section>
+
+<section id="projects">
+  <h2>Selected Work</h2>
+  <ul>
+    <li>
+      <strong>Medical RAG system</strong> — retrieves the exact page and semantic chunk
+      used to answer queries, with reference highlighting.
+    </li>
+    <li>
+      <strong>GraphRAG</strong> — structured knowledge extraction from documents using Neo4j.
+    </li>
+    <li>
+      <strong>Psychoactive drug prediction</strong> — ML pipeline using chemical and behavioral data.
+    </li>
+  </ul>
+</section>
+
+<section id="writing">
+  <h2>Writing / Thoughts</h2>
+  <ul>
+    <li>Why naive semantic chunking fails for RAG</li>
+    <li>LLM-based chunking vs embedding-only approaches</li>
+  </ul>
+</section>
+
+<section id="contact">
+  <h2>Contact</h2>
+  <p>
+    <a href="https://github.com/vini-ai2">GitHub</a> ·
+    <a href="https://www.linkedin.com/in/manasvini-kandikonda">LinkedIn</a> ·
+    <a href="mailto:officialvinik@gmail.com">Email</a>
+  </p>
+</section>
+
+<script>
+  function toggleMode() {
+    document.body.classList.toggle("light");
+  }
+</script>
+
+</body>
+</html>
