@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — Manasvini Kandikonda</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <span class="name mono">MANASVINI KANDIKONDA</span>
+  <nav>
+    <a href="index.html">home</a>
+    <a href="projects.html">projects</a>
+    <a href="journey.html">journey</a>
+    <a href="blog.html" class="active">blog</a>
+    <a href="interests.html">interests</a>
+  </nav>
+</div>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="side-id">
+      <div class="name">Manasvini<br>Kandikonda</div>
+      <div class="role">CS Engineering · Year 3</div>
+    </div>
+    <nav class="side-nav">
+      <a href="index.html"><span class="dot"></span>Home</a>
+      <a href="projects.html"><span class="dot"></span>Projects</a>
+      <a href="journey.html"><span class="dot"></span>Journey</a>
+      <a href="blog.html" class="active"><span class="dot"></span>Blog</a>
+      <a href="interests.html"><span class="dot"></span>Interests</a>
+    </nav>
+    <div class="side-socials">
+      <a href="https://github.com/vini-ai2" target="_blank" rel="noopener">github.com/vini-ai2</a>
+      <a href="https://www.linkedin.com/in/manasvini-kandikonda" target="_blank" rel="noopener">linkedin.com/in/manasvini-kandikonda</a>
+      <a href="mailto:officialvinik@gmail.com">officialvinik@gmail.com</a>
+    </div>
+  </aside>
+
+  <main>
+    <div class="content">
+
+      <div class="eyebrow">Notes</div>
+      <h1 class="page-title">Blog</h1>
+      <p class="lede">
+        Short write-ups on bugs that took longer than they should have, and the occasional
+        opinion. Two to start — more as they happen.
+      </p>
+
+      <div style="margin-top:48px;">
+
+        <article class="post">
+          <div class="post-meta">2026 · embedded systems · 6 min</div>
+          <h2>The mixer wasn't wrong. The sign was.</h2>
+          <div class="content-body">
+            <p>
+              Our drone would arm, spool up, and immediately try to flip itself over. Not
+              crash — <em>correct itself into a crash</em>, with real conviction. That's the
+              signature of a control loop that's technically working: the PID output looked
+              reasonable on the serial monitor, gains were sane, the IMU wasn't obviously
+              lying. Which meant the bug wasn't in the controller. It was in what happened to
+              the controller's output on the way to the motors.
+            </p>
+            <h3>Where it was hiding</h3>
+            <p>
+              The mixer takes throttle, roll, pitch, and yaw correction and distributes them
+              across four motors with a sign pattern that depends on motor position and spin
+              direction. Get one sign backwards and the motor doesn't ignore the correction —
+              it actively fights it, in exactly the direction that makes the tilt worse. On
+              our layout, two of the four signs were flipped, so any small disturbance became
+              self-reinforcing instead of self-correcting. It looked like an unstable
+              controller. It was an unstable mixer.
+            </p>
+            <p>
+              Fixed by re-deriving the mixer matrix from the actual motor layout instead of
+              copying one from a reference build with a different frame orientation, then
+              bench-testing each motor's correction direction by hand before ever spinning
+              props.
+            </p>
+            <h3>Two more, while I was in there</h3>
+            <p>
+              The ESCs were being driven at 20&nbsp;kHz when the protocol expected a 50&nbsp;Hz
+              update rate — a copy-paste from a different ESC family that happened to boot
+              without throwing an obvious error. And the MPU-6050's complementary filter
+              needed its blend constant retuned; too much weight on the gyro term and the
+              attitude estimate drifted slowly over a flight, too much on the accelerometer
+              and it got jittery on every vibration.
+            </p>
+            <p>
+              None of these three bugs looked like each other from the outside. All three
+              showed up as "the drone won't hold level." The lesson that stuck: when a control
+              system misbehaves, check the plant before you touch the controller.
+            </p>
+          </div>
+        </article>
+
+        <article class="post">
+          <div class="post-meta">2026 · computer vision · 5 min</div>
+          <h2>Two coordinate spaces, one very confused face</h2>
+          <div class="content-body">
+            <p>
+              We were running DECA live off a webcam feed, and after a few seconds the
+              reconstructed face would stop reacting — the mesh kept tracking head pose, but
+              every expression flattened out, like the model had simply given up on emoting.
+              The obvious suspect was the expression encoder itself. It wasn't.
+            </p>
+            <h3>Crop drift, not model drift</h3>
+            <p>
+              DECA crops the face tightly before encoding it, and our crop was being
+              recomputed every frame from the previous frame's landmark estimate rather than
+              a fresh detection. Small errors in that crop compounded frame over frame until
+              the crop window drifted just far enough that expression-relevant detail — the
+              corners of the mouth, the eye region — fell outside it. The identity and pose
+              estimates stayed stable because they depend on coarser features. The expression
+              code collapsed because it doesn't have that luxury.
+            </p>
+            <h3>The second bug was worse to find</h3>
+            <p>
+              Once expressions came back, the mesh projected slightly off from the video —
+              close enough to look like jitter, wrong enough to be obviously wrong on a still
+              frame. That turned out to be a mismatch between two of DECA's output coordinate
+              spaces: code downstream was treating a set of vertices as though they were
+              already in the weak-perspective camera space, when they were still in the
+              model's canonical space. No error, no NaN, just a consistently wrong projection
+              that any single frame made look plausible.
+            </p>
+            <p>
+              Fixed by tracing the actual transform chain DECA applies internally rather than
+              trusting variable names, and re-running the crop from a fresh FAN landmark
+              detection every frame instead of propagating the old one. Slower per frame,
+              correct every frame — worth it.
+            </p>
+          </div>
+        </article>
+
+      </div>
+
+      <div class="compose-note">
+        // more write-ups queued: xv6 swap file internals, the PICRI risk index from
+        Gridlock. check back.
+      </div>
+
+      <footer>
+        <div class="f-left">© 2026 Manasvini Kandikonda</div>
+        <div class="f-right">
+          <a href="https://github.com/vini-ai2" target="_blank" rel="noopener">GitHub</a> ·
+          <a href="https://www.linkedin.com/in/manasvini-kandikonda" target="_blank" rel="noopener">LinkedIn</a> ·
+          <a href="mailto:officialvinik@gmail.com">Email</a>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

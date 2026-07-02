@@ -1,218 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Manasvini</title>
-
-  <style>
-    /* ---------- THEME BASE ---------- */
-    html {
-      background: #ffffff;
-      color: #111111;
-    }
-
-    html.dark {
-      background: #121212;
-      color: #e0e0e0;
-    }
-
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      line-height: 1.6;
-    }
-
-    a {
-      color: #0070f3;
-      text-decoration: none;
-    }
-
-    html.dark a {
-      color: #61dafb;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    /* ---------- LAYOUT ---------- */
-    section {
-      padding: 60px 20px;
-      max-width: 880px;
-      margin: auto;
-    }
-
-    h1 {
-      font-size: 2.8rem;
-      margin-bottom: 0.4rem;
-    }
-
-    h2 {
-      font-size: 2rem;
-      margin-top: 2rem;
-      border-bottom: 1px solid #ccc;
-      padding-bottom: 6px;
-    }
-
-    html.dark h2 {
-      border-bottom: 1px solid #444;
-    }
-
-    p {
-      margin: 0.6rem 0;
-    }
-
-    ul {
-      padding-left: 20px;
-    }
-
-    li {
-      margin-bottom: 8px;
-    }
-
-    .muted {
-      color: #6b7280;
-    }
-
-    html.dark .muted {
-      color: #9ca3af;
-    }
-
-    /* ---------- NAV ---------- */
-    .nav {
-      display: flex;
-      justify-content: center;
-      gap: 22px;
-      padding: 18px;
-      background: inherit;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      border-bottom: 1px solid #e5e7eb;
-    }
-
-    html.dark .nav {
-      border-bottom: 1px solid #1f2937;
-    }
-
-    .nav a {
-      font-weight: 500;
-    }
-
-    /* ---------- BUTTONS ---------- */
-    .btn {
-      display: inline-block;
-      padding: 8px 14px;
-      border: 1px solid currentColor;
-      border-radius: 6px;
-      margin-right: 10px;
-      margin-top: 12px;
-    }
-
-    /* ---------- TOGGLE ---------- */
-    .toggleBtn {
-      position: fixed;
-      top: 12px;
-      right: 12px;
-      background: none;
-      color: inherit;
-      border: 1px solid currentColor;
-      padding: 6px 10px;
-      cursor: pointer;
-      font-size: 0.85rem;
-      border-radius: 6px;
-      z-index: 20;
-    }
-  </style>
-
-  <!-- DARK MODE LOGIC (SYSTEM + PERSISTENCE) -->
-  <script>
-    function applyTheme() {
-      const stored = localStorage.getItem("theme");
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-
-      const isDark = stored
-        ? stored === "dark"
-        : prefersDark;
-
-      document.documentElement.classList.toggle("dark", isDark);
-    }
-
-    function toggleMode() {
-      const isDark = document.documentElement.classList.toggle("dark");
-      localStorage.setItem("theme", isDark ? "dark" : "light");
-    }
-
-    applyTheme();
-  </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manasvini Kandikonda — Engineering Portfolio</title>
+<meta name="description" content="Manasvini Kandikonda — AI and Data Science engineering student. Embedded systems, computer vision, ML, and the occasional hackathon.">
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<button class="toggleBtn" onclick="toggleMode()">Toggle</button>
+<div class="topbar">
+  <span class="name mono">MANASVINI KANDIKONDA</span>
+  <nav>
+    <a href="index.html" class="active">home</a>
+    <a href="projects.html">projects</a>
+    <a href="journey.html">journey</a>
+    <a href="blog.html">blog</a>
+    <a href="interests.html">interests</a>
+  </nav>
+</div>
 
-<nav class="nav">
-  <a href="#about">About</a>
-  <a href="#projects">Work</a>
-  <a href="#writing">Writing</a>
-  <a href="#contact">Contact</a>
-</nav>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="side-id">
+      <div class="name">Manasvini<br>Kandikonda</div>
+      <div class="role">CS Engineering · Year 3</div>
+    </div>
+    <nav class="side-nav">
+      <a href="index.html" class="active"><span class="dot"></span>Home</a>
+      <a href="projects.html"><span class="dot"></span>Projects</a>
+      <a href="journey.html"><span class="dot"></span>Journey</a>
+      <a href="blog.html"><span class="dot"></span>Blog</a>
+      <a href="interests.html"><span class="dot"></span>Interests</a>
+    </nav>
+    <div class="side-socials">
+      <a href="https://github.com/vini-ai2" target="_blank" rel="noopener">github.com/vini-ai2</a>
+      <a href="https://www.linkedin.com/in/manasvini-kandikonda" target="_blank" rel="noopener">linkedin.com/in/manasvini-kandikonda</a>
+      <a href="mailto:officialvinik@gmail.com">officialvinik@gmail.com</a>
+    </div>
+  </aside>
 
-<section id="hero">
-  <h1>Manasvini</h1>
-  <p class="muted">
-    AI & Data Science · ML systems · RAG · LLM experiments
-  </p>
+  <main>
+    <div class="content">
 
-  <a class="btn" href="Manasvini_Kandikonda_Resume.pdf" target="_blank">
-    Resume
-  </a>
-  <a class="btn" href="https://github.com/vini-ai2" target="_blank">
-    GitHub
-  </a>
-</section>
+      <section class="hero">
+        <div class="eyebrow">Systems · Vision · ML</div>
+        <h1 class="page-title" style="font-size:clamp(30px,5vw,44px); margin-bottom:16px;">
+          Manasvini Kandikonda
+        </h1>
+        <p class="lede">
+          Third-year AI and Data Science engineering student who ends up debugging the part of the project
+          nobody assigned to her — PID signs on a drone mixer, coordinate spaces in a face
+          reconstruction pipeline, page tables in a toy kernel. Based in Bengaluru, building
+          things that sit close to hardware.
+        </p>
 
-<section id="about">
-  <h2>About</h2>
-  <p>
-    I build practical ML systems and explore where AI meets real-world constraints —
-    from retrieval-augmented pipelines to document intelligence and interpretability-focused tools.
-  </p>
-</section>
+        <div class="trace-wrap">
+          <svg viewBox="0 0 800 140" preserveAspectRatio="none" aria-hidden="true">
+            <g class="trace-grid">
+              <line x1="0" y1="35" x2="800" y2="35"></line>
+              <line x1="0" y1="70" x2="800" y2="70"></line>
+              <line x1="0" y1="105" x2="800" y2="105"></line>
+            </g>
+            <path class="trace-path" d="M0,110 C40,108 60,20 100,22 C140,24 150,95 190,90 C230,86 245,40 280,38 C320,36 335,80 370,72 C410,64 430,45 470,44 C520,43 540,58 580,55 C630,52 650,50 690,50 C720,50 750,50 800,50"></path>
+          </svg>
+          <div class="trace-label">
+            <span>ch.1 — pitch response, post-tune</span>
+            <span>settled</span>
+          </div>
+        </div>
+      </section>
 
-<section id="projects">
-  <h2>Selected Work</h2>
-  <ul>
-    <li>
-      <strong>Medical RAG system</strong> — retrieves the exact page and semantic chunk
-      used to answer queries, with reference highlighting.
-    </li>
-    <li>
-      <strong>GraphRAG</strong> — structured knowledge extraction from documents using Neo4j.
-    </li>
-    <li>
-      <strong>Psychoactive drug prediction</strong> — ML pipeline using chemical and behavioral data.
-    </li>
-  </ul>
-</section>
+      <div class="section-head">
+        <h2>Featured work</h2>
+        <span class="count">3 of 8 — full list on Projects</span>
+      </div>
 
-<section id="writing">
-  <h2>Writing / Thoughts</h2>
-  <ul>
-    <li>Why naive semantic chunking fails for RAG</li>
-    <li>LLM-based chunking vs embedding-only approaches</li>
-  </ul>
-</section>
+      <div class="proj-list">
+        <article class="card proj-card">
+          <h3>Gridlock — parking intelligence for Bengaluru</h3>
+          <div class="meta">Hackathon submission · DBSCAN · Random Forest · risk scoring</div>
+          <p>
+            An AI-driven parking intelligence system built on a real city data pipeline.
+            Used DBSCAN clustering to find informal parking hot spots, engineered a custom
+            PICRI risk index, and ran Random Forest feature importance to explain what
+            actually drives risk at a location — packaged into a full presentation deck.
+          </p>
+          <div class="tag-row">
+            <span class="tag">python</span><span class="tag">scikit-learn</span><span class="tag">pandas</span><span class="tag">geospatial</span>
+          </div>
+        </article>
 
-<section id="contact">
-  <h2>Contact</h2>
-  <p>
-    <a href="https://github.com/vini-ai2">GitHub</a> ·
-    <a href="https://www.linkedin.com/in/manasvini-kandikonda">LinkedIn</a> ·
-    <a href="mailto:officialvinik@gmail.com">Email</a>
-  </p>
-</section>
+        <article class="card proj-card">
+          <h3>ESP32 flight controller — from bare metal up</h3>
+          <div class="meta">Group project · embedded · control systems</div>
+          <p>
+            Built and stabilized a custom drone from scratch. Traced an inverted PID mixer
+            sign that was fighting itself on every axis, corrected ESC PWM frequency from
+            20&nbsp;kHz down to the expected 50&nbsp;Hz, and tuned an MPU-6050 complementary
+            filter until the thing could hold level in a draft.
+          </p>
+          <div class="tag-row">
+            <span class="tag">esp32</span><span class="tag">c++</span><span class="tag">pid control</span><span class="tag">imu</span>
+          </div>
+        </article>
 
+        <article class="card proj-card">
+          <h3>Real-time 3D face reconstruction on DECA</h3>
+          <div class="meta">Team project · computer vision</div>
+          <p>
+            Diagnosed frozen expression codes traced back to per-frame crop drift, reconciled
+            two mismatched coordinate spaces in DECA's output, fixed a crashing
+            <code class="mono" style="background:var(--bg-elev-2);border:1px solid var(--line);padding:1px 5px;border-radius:2px;color:var(--amber);font-size:0.85em;">extract_tex</code>
+            call, and wired a trained residual correction head into a live webcam feed.
+          </p>
+          <div class="tag-row">
+            <span class="tag">pytorch</span><span class="tag">deca</span><span class="tag">opencv</span><span class="tag">3dmm</span>
+          </div>
+        </article>
+      </div>
+
+      <div class="contact-strip">
+        <div class="ct-text">
+          <h3>Putting myself out there, properly, this year.</h3>
+          <p>Open to internships, collaborations, and people who want to argue about page replacement algorithms.</p>
+        </div>
+        <div class="ct-links">
+          <a class="btn" href="mailto:officialvinik@gmail.com">Email me</a>
+          <a class="btn ghost" href="projects.html">See all projects →</a>
+        </div>
+      </div>
+
+      <footer>
+        <div class="f-left">© 2026 Manasvini Kandikonda</div>
+        <div class="f-right">
+          <a href="https://github.com/vini-ai2" target="_blank" rel="noopener">GitHub</a> ·
+          <a href="https://www.linkedin.com/in/manasvini-kandikonda" target="_blank" rel="noopener">LinkedIn</a> ·
+          <a href="mailto:officialvinik@gmail.com">Email</a>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
