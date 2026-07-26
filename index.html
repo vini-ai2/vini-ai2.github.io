@@ -1,149 +1,254 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Manasvini Kandikonda — Engineering Portfolio</title>
-<meta name="description" content="Manasvini Kandikonda — AI and Data Science engineering student. Embedded systems, computer vision, ML, and the occasional hackathon.">
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Manasvini</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="topbar">
-  <span class="name mono">MANASVINI KANDIKONDA</span>
-  <nav>
-    <a href="index.html" class="active">home</a>
-    <a href="projects.html">projects</a>
-    <a href="journey.html">journey</a>
-    <a href="blog.html">blog</a>
-    <a href="interests.html">interests</a>
-  </nav>
+<div id="background-grid"></div>
+
+<div id="opening">
+    <div id="opening-text">
+        <p>The world has a multitude of perspectives, and it's a feat to find more than a few.</p>
+        <span class="opening-hint">scroll</span>
+    </div>
 </div>
 
-<div class="shell">
-  <aside class="sidebar">
-    <div class="side-id">
-      <div class="name">Manasvini<br>Kandikonda</div>
-      <div class="role">CS Engineering · Year 3</div>
-    </div>
-    <nav class="side-nav">
-      <a href="index.html" class="active"><span class="dot"></span>Home</a>
-      <a href="projects.html"><span class="dot"></span>Projects</a>
-      <a href="journey.html"><span class="dot"></span>Journey</a>
-      <a href="blog.html"><span class="dot"></span>Blog</a>
-      <a href="interests.html"><span class="dot"></span>Interests</a>
-    </nav>
-    <div class="side-socials">
-      <a href="https://github.com/vini-ai2" target="_blank" rel="noopener">github.com/vini-ai2</a>
-      <a href="https://www.linkedin.com/in/manasvini-kandikonda" target="_blank" rel="noopener">linkedin.com/in/manasvini-kandikonda</a>
-      <a href="mailto:officialvinik@gmail.com">officialvinik@gmail.com</a>
-    </div>
-  </aside>
- 
-  <main>
-    <div class="content">
+<header>
 
-      <section class="hero">
-        <div class="eyebrow">Systems · Vision · ML</div>
-        <h1 class="page-title" style="font-size:clamp(30px,5vw,44px); margin-bottom:16px;">
-          Manasvini Kandikonda
+    <div class="logo">
+        Manasvini
+    </div>
+
+    <nav>
+        <a href="index.html" class="active">Map</a>
+        <a href="writing.html">Writing</a>
+        <a href="projects.html">Projects</a>
+        <a href="about.html">About</a>
+    </nav>
+
+</header>
+
+
+<main>
+
+<section id="hero">
+
+    <div id="intro">
+
+        <h1>
+            This is how I currently partition the world.
         </h1>
-        <p class="lede">
-          Third-year AI and Data Science engineering student who ends up debugging the part of the project
-          nobody assigned to her — PID signs on a drone mixer, coordinate spaces in a face
-          reconstruction pipeline, page tables in a toy kernel. Based in Bengaluru, building
-          things that sit close to hardware.
+
+        <p>
+            Every project, question and obsession begins somewhere inside these four lenses.
         </p>
 
-        <div class="trace-wrap">
-          <svg viewBox="0 0 800 140" preserveAspectRatio="none" aria-hidden="true">
-            <g class="trace-grid">
-              <line x1="0" y1="35" x2="800" y2="35"></line>
-              <line x1="0" y1="70" x2="800" y2="70"></line>
-              <line x1="0" y1="105" x2="800" y2="105"></line>
-            </g>
-            <path class="trace-path" d="M0,110 C40,108 60,20 100,22 C140,24 150,95 190,90 C230,86 245,40 280,38 C320,36 335,80 370,72 C410,64 430,45 470,44 C520,43 540,58 580,55 C630,52 650,50 690,50 C720,50 750,50 800,50"></path>
-          </svg>
-          <div class="trace-label">
-            <span>ch.1 — pitch response, post-tune</span>
-            <span>settled</span>
-          </div>
-        </div>
-      </section>
+    </div>
 
-      <div class="section-head">
-        <h2>Featured work</h2>
-        <span class="count">3 of 8 — full list on Projects</span>
-      </div>
+    <div id="venn-container">
 
-      <div class="proj-list">
-        <article class="card proj-card">
-          <h3>Gridlock — parking intelligence for Bengaluru</h3>
-          <div class="meta">Hackathon submission · DBSCAN · Random Forest · risk scoring</div>
-          <p>
-            An AI-driven parking intelligence system built on a real city data pipeline.
-            Used DBSCAN clustering to find informal parking hot spots, engineered a custom
-            PICRI risk index, and ran Random Forest feature importance to explain what
-            actually drives risk at a location — packaged into a full presentation deck.
-          </p>
-          <div class="tag-row">
-            <span class="tag">python</span><span class="tag">scikit-learn</span><span class="tag">pandas</span><span class="tag">geospatial</span>
-          </div>
-        </article>
+<svg id="venn" viewBox="0 0 1200 900">
 
-        <article class="card proj-card">
-          <h3>ESP32 flight controller — from bare metal up</h3>
-          <div class="meta">Group project · embedded · control systems</div>
-          <p>
-            Built and stabilized a custom drone from scratch. Traced an inverted PID mixer
-            sign that was fighting itself on every axis, corrected ESC PWM frequency from
-            20&nbsp;kHz down to the expected 50&nbsp;Hz, and tuned an MPU-6050 complementary
-            filter until the thing could hold level in a draft.
-          </p>
-          <div class="tag-row">
-            <span class="tag">esp32</span><span class="tag">c++</span><span class="tag">pid control</span><span class="tag">imu</span>
-          </div>
-        </article>
+    <!-- Circles -->
 
-        <article class="card proj-card">
-          <h3>Real-time 3D face reconstruction on DECA</h3>
-          <div class="meta">Team project · computer vision</div>
-          <p>
-            Diagnosed frozen expression codes traced back to per-frame crop drift, reconciled
-            two mismatched coordinate spaces in DECA's output, fixed a crashing
-            <code class="mono" style="background:var(--bg-elev-2);border:1px solid var(--line);padding:1px 5px;border-radius:2px;color:var(--amber);font-size:0.85em;">extract_tex</code>
-            call, and wired a trained residual correction head into a live webcam feed.
-          </p>
-          <div class="tag-row">
-            <span class="tag">pytorch</span><span class="tag">deca</span><span class="tag">opencv</span><span class="tag">3dmm</span>
-          </div>
-        </article>
-      </div>
+    <circle
+        id="cs"
+        class="venn-circle interactive"
+        cx="430"
+        cy="360"
+        r="210" />
 
-      <div class="contact-strip">
-        <div class="ct-text">
-          <h3>Putting myself out there, properly, this year.</h3>
-          <p>Open to internships, collaborations, and people who want to argue about page replacement algorithms.</p>
-        </div>
-        <div class="ct-links">
-          <a class="btn" href="mailto:officialvinik@gmail.com">Email me</a>
-          <a class="btn ghost" href="projects.html">See all projects →</a>
-        </div>
-      </div>
+    <circle
+        id="ai"
+        class="venn-circle interactive"
+        cx="630"
+        cy="360"
+        r="210" />
 
-      <footer>
-        <div class="f-left">© 2026 Manasvini Kandikonda</div>
-        <div class="f-right">
-          <a href="https://github.com/vini-ai2" target="_blank" rel="noopener">GitHub</a> ·
-          <a href="https://www.linkedin.com/in/manasvini-kandikonda" target="_blank" rel="noopener">LinkedIn</a> ·
-          <a href="mailto:officialvinik@gmail.com">Email</a>
-        </div>
-      </footer>
+    <circle
+        id="math"
+        class="venn-circle interactive"
+        cx="530"
+        cy="520"
+        r="210" />
+
+    <circle
+        id="econ"
+        class="venn-circle interactive"
+        cx="530"
+        cy="210"
+        r="210" />
+    <!-- Invisible intersection regions -->
+
+<ellipse
+    id="cs-ai"
+    class="intersection"
+    cx="530"
+    cy="360"
+    rx="80"
+    ry="120"/>
+
+<ellipse
+    id="cs-math"
+    class="intersection"
+    cx="475"
+    cy="445"
+    rx="70"
+    ry="70"/>
+
+<ellipse
+    id="ai-math"
+    class="intersection"
+    cx="585"
+    cy="445"
+    rx="70"
+    ry="70"/>
+
+<ellipse
+    id="cs-econ"
+    class="intersection"
+    cx="475"
+    cy="275"
+    rx="70"
+    ry="70"/>
+
+<ellipse
+    id="ai-econ"
+    class="intersection"
+    cx="585"
+    cy="275"
+    rx="70"
+    ry="70"/>
+
+<circle
+    id="center"
+    class="intersection"
+    cx="530"
+    cy="360"
+    r="55"/>
+
+    <!-- Permanent labels -->
+
+    <text
+        x="160"
+        y="360"
+        class="label">
+        Computer Science
+    </text>
+
+    <text
+        x="160"
+        y="385"
+        class="subtitle">
+        How can this be built?
+    </text>
+
+
+    <text
+        x="760"
+        y="360"
+        class="label">
+        Artificial Intelligence
+    </text>
+
+    <text
+        x="760"
+        y="385"
+        class="subtitle">
+        How can this learn?
+    </text>
+
+
+    <text
+        x="450"
+        y="780"
+        class="label">
+        Mathematics
+    </text>
+
+    <text
+        x="450"
+        y="805"
+        class="subtitle">
+        Why is this true?
+    </text>
+
+
+    <text
+        x="470"
+        y="90"
+        class="label">
+        Economics
+    </text>
+
+    <text
+        x="470"
+        y="115"
+        class="subtitle">
+        What incentives emerge?
+    </text>
+
+</svg>
 
     </div>
-  </main>
+
+</section>
+
+<section id="graph-section">
+
+    <div id="map-container">
+
+        <svg id="knowledge-map"
+             viewBox="0 0 1400 900">
+
+            <g id="connections"></g>
+            <g id="nodes"></g>
+
+        </svg>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<aside id="panel">
+
+<button id="close">
+×
+</button>
+
+<div id="panel-content">
+
+<h1>Select a node.</h1>
+
+<p>
+The website is a map instead of a portfolio.
+</p>
+
 </div>
 
+</aside>
+
+<script src="data.js"></script>
+
+<script src="venn.js"></script>
+
+<script src="panel.js"></script>
+
 <script src="script.js"></script>
+
 </body>
 </html>
