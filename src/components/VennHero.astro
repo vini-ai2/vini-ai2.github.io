@@ -1,0 +1,117 @@
+<section id="hero">
+
+  <div id="intro">
+    <h1>This is how I currently partition the world.</h1>
+    <p>Every project, question and obsession begins somewhere inside these four lenses.</p>
+  </div>
+
+  <div id="venn-container">
+    <svg id="venn" viewBox="0 0 1200 900">
+
+      <circle id="cs" class="venn-circle interactive" cx="430" cy="360" r="210" />
+      <circle id="ai" class="venn-circle interactive" cx="630" cy="360" r="210" />
+      <circle id="math" class="venn-circle interactive" cx="530" cy="520" r="210" />
+      <circle id="econ" class="venn-circle interactive" cx="530" cy="210" r="210" />
+
+      <ellipse id="cs-ai" class="intersection" cx="530" cy="360" rx="80" ry="120" />
+      <ellipse id="cs-math" class="intersection" cx="475" cy="445" rx="70" ry="70" />
+      <ellipse id="ai-math" class="intersection" cx="585" cy="445" rx="70" ry="70" />
+      <ellipse id="cs-econ" class="intersection" cx="475" cy="275" rx="70" ry="70" />
+      <ellipse id="ai-econ" class="intersection" cx="585" cy="275" rx="70" ry="70" />
+      <circle id="center" class="intersection" cx="530" cy="360" r="55" />
+
+      <text x="160" y="360" class="venn-label">Computer Science</text>
+      <text x="160" y="385" class="venn-subtitle">How can this be built?</text>
+
+      <text x="760" y="360" class="venn-label">Artificial Intelligence</text>
+      <text x="760" y="385" class="venn-subtitle">How can this learn?</text>
+
+      <text x="450" y="780" class="venn-label">Mathematics</text>
+      <text x="450" y="805" class="venn-subtitle">Why is this true?</text>
+
+      <text x="470" y="90" class="venn-label">Economics</text>
+      <text x="470" y="115" class="venn-subtitle">What incentives emerge?</text>
+
+    </svg>
+  </div>
+
+</section>
+
+<script>
+  const vennSvg = document.getElementById('venn')!;
+  const vennCircles = document.querySelectorAll('.interactive');
+
+  const worldview: Record<string, { title: string; question: string; words: string[] }> = {
+    cs: { title: 'Computer Science', question: 'How can this be built?', words: ['Systems', 'Networks', 'Distributed Computing', 'Compilers'] },
+    ai: { title: 'Artificial Intelligence', question: 'How can this learn?', words: ['Representation', 'Embeddings', 'Reasoning', 'Vision'] },
+    math: { title: 'Mathematics', question: 'Why is this true?', words: ['Graphs', 'Optimization', 'Topology', 'Probability'] },
+    econ: { title: 'Economics', question: 'What incentives emerge?', words: ['Markets', 'Mechanism Design', 'Information', 'Auctions'] }
+  };
+
+  const intersections: Record<string, { title: string; desc: string; topics: string[] }> = {
+    'cs-ai': { title: 'Building Intelligence', desc: 'Where software becomes adaptive.', topics: ['Computer Vision', 'Knowledge Graphs', 'Robotics', 'Agentic Systems'] },
+    'cs-math': { title: 'Algorithms', desc: 'Where proofs become programs.', topics: ['Graphs', 'Optimization', 'Complexity', 'Discrete Math'] },
+    'ai-math': { title: 'Learning Theory', desc: 'Where intelligence becomes explainable.', topics: ['Probability', 'Geometry', 'Optimization', 'Information Theory'] },
+    'cs-econ': { title: 'Distributed Incentives', desc: 'Systems shaped by incentives.', topics: ['Distributed Systems', 'Cryptography', 'Mechanism Design', 'Blockchains'] },
+    'ai-econ': { title: 'Decision Making', desc: 'Learning under incentives.', topics: ['Reinforcement Learning', 'Markets', 'Auctions', 'Game Theory'] },
+    center: { title: 'The Questions', desc: 'Ideas I keep returning to.', topics: ['Representation', 'Complex Systems', 'Intelligence', 'Emergence'] }
+  };
+
+  function createText(text: string, x: number, y: number, cls: string) {
+    const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    t.textContent = text;
+    t.setAttribute('x', String(x));
+    t.setAttribute('y', String(y));
+    t.setAttribute('text-anchor', 'middle');
+    t.classList.add(cls);
+    return t;
+  }
+
+  function removeWords() {
+    document.querySelectorAll('.hover-title, .hover-question, .floating-word').forEach((el) => el.remove());
+  }
+
+  function showWords(id: string) {
+    removeWords();
+    const data = worldview[id];
+    const circle = document.getElementById(id)!;
+    const cx = Number(circle.getAttribute('cx'));
+    const cy = Number(circle.getAttribute('cy'));
+
+    vennSvg.appendChild(createText(data.title, cx, cy - 55, 'hover-title'));
+    vennSvg.appendChild(createText(data.question, cx, cy - 25, 'hover-question'));
+
+    data.words.forEach((word, i) => {
+      const x = cx + (Math.random() * 40 - 20);
+      const y = cy + 25 + i * 32;
+      const text = createText(word, x, y, 'floating-word');
+      (text as HTMLElement).style.animationDelay = `${i * 0.08}s`;
+      vennSvg.appendChild(text);
+    });
+  }
+
+  function showIntersection(id: string) {
+    removeWords();
+    const data = intersections[id];
+    if (!data) return;
+    const openPanel = (window as any).openPanel;
+    if (!openPanel) return;
+    const topicsHtml = `<ul>${data.topics.map((t) => `<li>${t}</li>`).join('')}</ul>`;
+    openPanel(`<h1>${data.title}</h1><p>${data.desc}</p>${topicsHtml}`);
+  }
+
+  vennCircles.forEach((circle) => {
+    circle.addEventListener('mouseenter', () => {
+      vennCircles.forEach((c) => { if (c !== circle) c.classList.add('fade'); });
+      showWords(circle.id);
+    });
+    circle.addEventListener('mouseleave', () => {
+      vennCircles.forEach((c) => c.classList.remove('fade'));
+      removeWords();
+    });
+  });
+
+  document.querySelectorAll('.intersection').forEach((region) => {
+    region.addEventListener('click', () => showIntersection(region.id));
+  });
+</script>

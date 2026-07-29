@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Writing — Manasvini" active="writing" panelDefaultTitle="Select a piece." panelDefaultBody="Essays and notes, unsorted by importance.">
+
+  <main>
+    <div class="page-hero">
+      <div class="eyebrow">Writing</div>
+      <h1>Essays, and the notes before they were essays.</h1>
+      <p>Some of these are argued all the way through. Some are just a thought I haven't finished having yet — both are here on purpose.</p>
+    </div>
+
+    <div class="filters" id="filters"></div>
+    <div class="card-grid" id="writing-grid"></div>
+  </main>
+
+</BaseLayout>
+
+<script>
+  import { writing } from '../data/writing.js';
+
+  const grid = document.getElementById('writing-grid')!;
+  const filterBar = document.getElementById('filters')!;
+  const types = ['all', 'essay', 'note'];
+  const typeLabels: Record<string, string> = { all: 'All', essay: 'Essays', note: 'Notes' };
+
+  function renderFilters() {
+    filterBar.innerHTML = types
+      .map((t) => `<button class="filter-pill ${t === 'all' ? 'active' : ''}" data-type="${t}">${typeLabels[t]}</button>`)
+      .join('');
+
+    filterBar.querySelectorAll('.filter-pill').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        filterBar.querySelectorAll('.filter-pill').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderGrid((btn as HTMLElement).dataset.type);
+      });
+    });
+  }
+
+  function renderGrid(filter = 'all') {
+    const items = filter === 'all' ? writing : writing.filter((w) => w.type === filter);
+
+    grid.innerHTML = items
+      .map(
+        (w) => `
+        <div class="card" data-id="${w.id}">
+          <div class="tag">${w.type}${w.date ? ' · ' + w.date : ''}</div>
+          <h3>${w.title}</h3>
+          <p>${w.excerpt}</p>
+        </div>`
+      )
+      .join('');
+
+    grid.querySelectorAll('.card').forEach((card) => {
+      card.addEventListener('click', () => {
+        const w = writing.find((x) => x.id === (card as HTMLElement).dataset.id)!;
+        const makeList = (window as any).makeList;
+        const openPanel = (window as any).openPanel;
+
+        const linksHtml = w.links && w.links.length
+          ? makeList('Related', w.links.map((l: any) => `<a class="panel-link" href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`))
+          : '';
+
+        openPanel(`<h1>${w.title}</h1>${w.body}${linksHtml}`);
+      });
+    });
+  }
+
+  renderFilters();
+  renderGrid();
+</script>

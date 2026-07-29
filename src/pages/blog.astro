@@ -1,47 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Blog — Manasvini Kandikonda</title>
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
 
-<div class="topbar">
-  <span class="name mono">MANASVINI KANDIKONDA</span>
-  <nav>
-    <a href="index.html">home</a>
-    <a href="projects.html">projects</a>
-    <a href="journey.html">journey</a>
-    <a href="blog.html" class="active">blog</a>
-    <a href="interests.html">interests</a>
-  </nav>
-</div>
-
-<div class="shell">
-  <aside class="sidebar">
-    <div class="side-id">
-      <div class="name">Manasvini<br>Kandikonda</div>
-      <div class="role">CS Engineering · Year 3</div>
-    </div>
-    <nav class="side-nav">
-      <a href="index.html"><span class="dot"></span>Home</a>
-      <a href="projects.html"><span class="dot"></span>Projects</a>
-      <a href="journey.html"><span class="dot"></span>Journey</a>
-      <a href="blog.html" class="active"><span class="dot"></span>Blog</a>
-      <a href="interests.html"><span class="dot"></span>Interests</a>
-    </nav>
-    <div class="side-socials">
-      <a href="https://github.com/vini-ai2" target="_blank" rel="noopener">github.com/vini-ai2</a>
-      <a href="https://www.linkedin.com/in/manasvini-kandikonda" target="_blank" rel="noopener">linkedin.com/in/manasvini-kandikonda</a>
-      <a href="mailto:officialvinik@gmail.com">officialvinik@gmail.com</a>
-    </div>
-  </aside>
+<BaseLayout title="Blog — Manasvini Kandikonda" active="blog">
 
   <main>
-    <div class="content">
-
+    <div class="page-shell">
       <div class="eyebrow">Notes</div>
       <h1 class="page-title">Blog</h1>
       <p class="lede">
@@ -150,11 +114,7 @@
           <a href="mailto:officialvinik@gmail.com">Email</a>
         </div>
       </footer>
-
     </div>
   </main>
-</div>
 
-<script src="script.js"></script>
-</body>
-</html>
+</BaseLayout>

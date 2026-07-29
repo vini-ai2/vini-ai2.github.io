@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import VennHero from '../components/VennHero.astro';
+import KnowledgeGraph from '../components/KnowledgeGraph.astro';
+---
+
+<BaseLayout title="Manasvini" active="map" subpage={false} panelDefaultTitle="Select a node." panelDefaultBody="The website is a map instead of a portfolio.">
+
+  <div id="opening">
+    <div id="opening-text">
+      <p>The world has a multitude of perspectives, and it's a feat to find more than a few.</p>
+      <span class="opening-hint">scroll</span>
+    </div>
+  </div>
+
+  <main>
+    <div id="intro-space"></div>
+    <VennHero />
+    <KnowledgeGraph />
+  </main>
+
+</BaseLayout>
+
+<script>
+  const opening = document.getElementById('opening')!;
+  const hero = document.getElementById('hero')!;
+  const venn = document.getElementById('venn')!;
+  const graphWrap = document.getElementById('graph-canvas-wrap')!;
+  const graphIntro = document.getElementById('graph-intro')!;
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function onScroll() {
+    const introSpace = window.innerHeight * 0.52;
+    const introProgress = Math.min(Math.max(window.scrollY / introSpace, 0), 1);
+
+    opening.style.opacity = String(1 - introProgress);
+    opening.style.filter = reducedMotion ? '' : `blur(${introProgress * 10}px)`;
+    opening.style.transform = `translateY(${-introProgress * 36}px)`;
+    opening.style.pointerEvents = introProgress >= 1 ? 'none' : 'auto';
+    opening.style.visibility = introProgress >= 1 ? 'hidden' : 'visible';
+
+    const progress = Math.min(Math.max((window.scrollY - introSpace) / window.innerHeight, 0), 1);
+
+    venn.style.opacity = String(1 - progress);
+    venn.style.transform = `scale(${1 - progress * 0.12})`;
+
+    graphWrap.style.opacity = String(progress);
+    graphWrap.style.transform = `translateY(${80 - progress * 80}px)`;
+
+    graphIntro.classList.toggle('visible', progress > 0.5);
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+</script>

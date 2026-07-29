@@ -1,0 +1,90 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const items = [
+  {
+    date: '2026', title: 'Gridlock — hackathon submission',
+    body: 'Built and presented Gridlock, an AI-driven parking intelligence system for Bengaluru, end to end — from a real data pipeline through clustering and risk scoring to a full deck.',
+    tags: ['hackathon', 'ml']
+  },
+  {
+    date: '2026', title: 'Drone flight stabilization, ESP32',
+    body: 'Deep in hardware debugging for a group drone project — PID mixer sign errors, ESC protocol fixes, IMU calibration — followed by presenting the whole system, slides and spoken script included.',
+    tags: ['embedded', 'controls']
+  },
+  {
+    date: '2026', title: 'Real-time 3D face reconstruction, DECA',
+    body: 'Spent weeks inside a research computer vision pipeline — crop drift, coordinate spaces, a trained residual correction head — until it ran live off a webcam. Closed it out with a full technical presentation to the team.',
+    tags: ['computer vision', 'pytorch']
+  },
+  {
+    date: '2026', title: 'Optimization theory, exam prep',
+    body: 'Worked through ADMM, proximal methods, shrinkage / soft-thresholding, and Douglas–Rachford splitting in depth for end-of-semester exams — derivations, not just definitions.',
+    tags: ['optimization', 'coursework']
+  },
+  {
+    date: 'Earlier', title: 'xv6-RISC-V — virtual memory, paging & swapping',
+    body: "Owned the swap file interface and page fault handler on a team OS project, then went past scope to help finish two teammates' components — a page replacement algorithm and PTE helper functions.",
+    tags: ['operating systems', 'c']
+  },
+  {
+    date: 'Earlier', title: 'Speech-based scam detection pipeline',
+    body: 'Built the NLP text-classification stage of a scam-call detector using a HuggingFace transformers pipeline, chasing down a crashing prediction method and dataset quality problems along the way.',
+    tags: ['nlp', 'huggingface']
+  },
+  {
+    date: 'Earlier', title: 'Flux — Meta PyTorch Hackathon',
+    body: 'Built an OpenEnv-compatible real estate valuation environment with a FastAPI server and an LLM-driven inference agent, and spent most of the time debugging reward clamping and environment subclassing.',
+    tags: ['hackathon', 'reinforcement learning']
+  },
+  {
+    date: 'Background', title: 'ROS 2 / Gazebo rover simulation',
+    body: 'URDF/xacro authoring, ros2_control differential-drive configuration, systemd orchestration, and enough Gazebo Classic-vs-Ignition plugin debugging to last a while.',
+    tags: ['robotics', 'ros2']
+  },
+  {
+    date: 'Background', title: 'Feedforward neural network in raw NumPy',
+    body: 'Built a neural net from scratch, no frameworks, for a math project analyzing a protein structure dataset — where the point was understanding every gradient by hand.',
+    tags: ['ml fundamentals', 'numpy']
+  },
+  {
+    date: 'Background', title: 'Stripe database architecture — deep dive & presentation',
+    body: "Prepared and delivered a technical presentation on Stripe's database architecture: MVCC, idempotency, the outbox pattern, semi-sync replication, and tokenization.",
+    tags: ['systems', 'databases']
+  }
+];
+---
+
+<BaseLayout title="Journey — Manasvini Kandikonda" active="journey">
+
+  <main>
+    <div class="page-shell">
+      <div class="eyebrow">Log</div>
+      <h1 class="page-title">Journey</h1>
+      <p class="lede">A running log of what I've been building and learning, most recent first. Less resume, more changelog.</p>
+
+      <div class="timeline" style="margin-top:52px;">
+        {items.map((item) => (
+          <div class="tl-item">
+            <div class="tl-date">{item.date}</div>
+            <h3>{item.title}</h3>
+            <p>{item.body}</p>
+            <div class="tl-tags tag-row">
+              {item.tags.map((t) => <span class="tag">{t}</span>)}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <footer>
+        <div class="f-left">© 2026 Manasvini Kandikonda</div>
+        <div class="f-right">
+          <a href="https://github.com/vini-ai2" target="_blank" rel="noopener">GitHub</a> ·
+          <a href="https://www.linkedin.com/in/manasvini-kandikonda" target="_blank" rel="noopener">LinkedIn</a> ·
+          <a href="mailto:officialvinik@gmail.com">Email</a>
+        </div>
+      </footer>
+    </div>
+  </main>
+
+</BaseLayout>

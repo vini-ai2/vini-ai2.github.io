@@ -1,0 +1,351 @@
+---
+/*
+Canvas-based force-directed graph.
+Data is imported client-side.
+*/
+---
+
+
+<section id="graph-section">
+
+  <div id="graph-intro">
+    <div class="eyebrow">The map, alive</div>
+    <h2>A knowledge graph, not a folder tree.</h2>
+    <p>
+      Every node is a lens I keep returning to. Drag them around, hover to see what's
+      connected, click to open it up. The pulses are just the connections thinking out loud.
+    </p>
+  </div>
+
+  <div id="graph-canvas-wrap">
+    <canvas id="graph"></canvas>
+  </div>
+
+  <div id="graph-legend">
+    <span class="legend-item"><span class="dot" style="background:var(--c-cs)"></span>Computer Science</span>
+    <span class="legend-item"><span class="dot" style="background:var(--c-ai)"></span>Artificial Intelligence</span>
+    <span class="legend-item"><span class="dot" style="background:var(--c-math)"></span>Mathematics</span>
+    <span class="legend-item"><span class="dot" style="background:var(--c-econ)"></span>Economics</span>
+  </div>
+
+  <div id="graph-hint">drag to rearrange<br/>click a node to open it</div>
+
+</section>
+
+<script lang="ts">
+  import { knowledge, lensMeta } from '../data/knowledge.js';
+
+  type GNode = {
+    id: string;
+    title: string;
+    categories: string[];
+    description: string;
+    projects: string[];
+    writing: string[];
+    reading: string[];
+    links: string[];
+    x: number; y: number; vx: number; vy: number; r: number;
+  };
+
+  const canvas = document.getElementById('graph') as HTMLCanvasElement;
+  const wrap = document.getElementById('graph-canvas-wrap') as HTMLDivElement;
+  const ctx = canvas.getContext('2d')!;
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function cssVar(name: string) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  function catColor(cats: string[]) {
+    return cats.map((c) => cssVar((lensMeta as any)[c].varName));
+  }
+
+  // ---- build node/edge model ----
+  let W = 0, H = 0, DPR = 1;
+
+  const nodes: GNode[] = knowledge.map((n, i) => {
+    const angle = (i / knowledge.length) * Math.PI * 2;
+    return {
+      ...n,
+      x: Math.cos(angle) * 160,
+      y: Math.sin(angle) * 160,
+      vx: 0, vy: 0,
+      r: 15 + n.links.length * 1.6
+    };
+  });
+
+  const nodeById = new Map(nodes.map((n) => [n.id, n]));
+
+  type Edge = { a: GNode; b: GNode };
+  const edgeSet = new Set<string>();
+  const edges: Edge[] = [];
+  nodes.forEach((n) => {
+    n.links.forEach((linkId) => {
+      const target = nodeById.get(linkId);
+      if (!target) return;
+      const key = [n.id, target.id].sort().join('|');
+      if (edgeSet.has(key)) return;
+      edgeSet.add(key);
+      edges.push({ a: n, b: target });
+    });
+  });
+
+  // ---- simulation ----
+  const REPEL = 5200;
+  const SPRING_LEN = 150;
+  const SPRING_K = 0.02;
+  const CENTER_K = 0.012;
+  const DAMPING = 0.86;
+
+  function step() {
+    // repulsion
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const a = nodes[i], b = nodes[j];
+        let dx = a.x - b.x, dy = a.y - b.y;
+        let distSq = dx * dx + dy * dy || 0.01;
+        const dist = Math.sqrt(distSq);
+        const force = REPEL / distSq;
+        const fx = (dx / dist) * force;
+        const fy = (dy / dist) * force;
+        a.vx += fx; a.vy += fy;
+        b.vx -= fx; b.vy -= fy;
+      }
+    }
+    // springs
+    edges.forEach(({ a, b }) => {
+      const dx = b.x - a.x, dy = b.y - a.y;
+      const dist = Math.sqrt(dx * dx + dy * dy) || 0.01;
+      const diff = (dist - SPRING_LEN) * SPRING_K;
+      const fx = (dx / dist) * diff, fy = (dy / dist) * diff;
+      a.vx += fx; a.vy += fy;
+      b.vx -= fx; b.vy -= fy;
+    });
+    // center gravity
+    nodes.forEach((n) => {
+      n.vx -= n.x * CENTER_K;
+      n.vy -= n.y * CENTER_K;
+    });
+    // integrate
+    nodes.forEach((n) => {
+      if (n === dragNode) return;
+      n.vx *= DAMPING; n.vy *= DAMPING;
+      n.x += n.vx; n.y += n.vy;
+    });
+  }
+
+  if (reducedMotion) {
+    for (let i = 0; i < 400; i++) step(); // settle once, no continuous animation
+  }
+
+  // ---- interaction state ----
+  let dragNode: GNode | null = null;
+  let hoverNode: GNode | null = null;
+  let mouseX = 0, mouseY = 0;
+  let dragged = false;
+
+  function toWorld(px: number, py: number) {
+    return { x: (px - W / 2) / zoom, y: (py - H / 2) / zoom };
+  }
+  function toScreen(x: number, y: number) {
+    return { x: x * zoom + W / 2, y: y * zoom + H / 2 };
+  }
+
+  let zoom = 1;
+
+  function resize() {
+    const rect = wrap.getBoundingClientRect();
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = rect.width; H = rect.height;
+    canvas.width = W * DPR;
+    canvas.height = H * DPR;
+    canvas.style.width = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    zoom = Math.min(W, H) / 620;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function hitTest(px: number, py: number): GNode | null {
+    const { x, y } = toWorld(px, py);
+    let closest: GNode | null = null;
+    let closestDist = Infinity;
+    nodes.forEach((n) => {
+      const d = Math.hypot(n.x - x, n.y - y);
+      if (d < n.r + 6 && d < closestDist) { closest = n; closestDist = d; }
+    });
+    return closest;
+  }
+
+  canvas.addEventListener('pointerdown', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const px = e.clientX - rect.left, py = e.clientY - rect.top;
+    const hit = hitTest(px, py);
+    dragged = false;
+    if (hit) {
+      dragNode = hit;
+      canvas.setPointerCapture(e.pointerId);
+    }
+  });
+
+  canvas.addEventListener('pointermove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    mouseX = e.clientX - rect.left; mouseY = e.clientY - rect.top;
+
+    if (dragNode) {
+      dragged = true;
+      const { x, y } = toWorld(mouseX, mouseY);
+      dragNode.x = x; dragNode.y = y;
+      dragNode.vx = 0; dragNode.vy = 0;
+    } else {
+      const hit = hitTest(mouseX, mouseY);
+      hoverNode = hit;
+      canvas.style.cursor = hit ? 'pointer' : 'grab';
+    }
+    if (reducedMotion && !animating) render();
+  });
+
+  window.addEventListener('pointerup', () => {
+    dragNode = null;
+  });
+
+  canvas.addEventListener('click', () => {
+    if (dragged) return; // was a drag, not a click
+    if (hoverNode) openNodePanel(hoverNode);
+  });
+
+  function openNodePanel(node: GNode) {
+    const makeList = (window as any).makeList;
+    const openPanel = (window as any).openPanel;
+    if (!openPanel) return;
+    openPanel(`
+      <h1>${node.title}</h1>
+      <p>${node.description}</p>
+      ${makeList('Projects', node.projects)}
+      ${makeList('Writing', node.writing)}
+      ${makeList('Reading', node.reading)}
+    `);
+  }
+
+  // ---- signal particles (skip entirely under reduced motion) ----
+  type Particle = { edge: Edge; t: number; speed: number };
+  let particles: Particle[] = [];
+
+  function maybeSpawnParticle() {
+    if (reducedMotion) return;
+    if (Math.random() < 0.035 && edges.length) {
+      const edge = edges[Math.floor(Math.random() * edges.length)];
+      particles.push({ edge, t: 0, speed: 0.012 + Math.random() * 0.01 });
+    }
+  }
+
+  // ---- render ----
+  function mixColor(hexes: string[]) {
+    if (hexes.length === 1) return hexes[0];
+    // simple average blend of two hex colors
+    const parse = (h: string) => {
+      const v = h.replace('#', '');
+      return [parseInt(v.slice(0, 2), 16), parseInt(v.slice(2, 4), 16), parseInt(v.slice(4, 6), 16)];
+    };
+    const [a, b] = hexes.map(parse);
+    const mix = a.map((v, i) => Math.round((v + b[i]) / 2));
+    return `rgb(${mix.join(',')})`;
+  }
+
+  function render() {
+    ctx.clearRect(0, 0, W, H);
+
+    const dim = hoverNode !== null;
+    const connected = new Set<string>();
+    if (hoverNode) {
+      connected.add(hoverNode.id);
+      edges.forEach((e) => {
+        if (e.a === hoverNode) connected.add(e.b.id);
+        if (e.b === hoverNode) connected.add(e.a.id);
+      });
+    }
+
+    // edges
+    edges.forEach((e) => {
+      const p1 = toScreen(e.a.x, e.a.y);
+      const p2 = toScreen(e.b.x, e.b.y);
+      const isHoveredEdge = hoverNode && (e.a === hoverNode || e.b === hoverNode);
+
+      ctx.beginPath();
+      ctx.moveTo(p1.x, p1.y);
+      ctx.lineTo(p2.x, p2.y);
+      ctx.strokeStyle = isHoveredEdge ? cssVar('--c-text-muted') : cssVar('--c-border-subtle');
+      ctx.lineWidth = isHoveredEdge ? 1.5 : 0.8;
+      ctx.globalAlpha = dim ? (isHoveredEdge ? 0.8 : 0.15) : 0.4;
+      ctx.stroke();
+    });
+    ctx.globalAlpha = 1.0;
+
+    // particles
+    if (!reducedMotion) {
+      particles.forEach((p) => {
+        const p1 = toScreen(p.edge.a.x, p.edge.a.y);
+        const p2 = toScreen(p.edge.b.x, p.edge.b.y);
+        const x = p1.x + (p2.x - p1.x) * p.t;
+        const y = p1.y + (p2.y - p1.y) * p.t;
+        ctx.beginPath();
+        ctx.arc(x, y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = cssVar('--c-accent-glow');
+        ctx.fill();
+      });
+    }
+
+    // nodes
+    nodes.forEach((n) => {
+      const p = toScreen(n.x, n.y);
+      const colors = catColor(n.categories);
+      const isFocused = hoverNode === n;
+      const isConnected = connected.has(n.id);
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, n.r * zoom, 0, Math.PI * 2);
+      ctx.fillStyle = mixColor(colors);
+      ctx.globalAlpha = dim ? (isFocused || isConnected ? 1.0 : 0.2) : 0.85;
+      ctx.fill();
+
+      // stroke / ring around active nodes
+      if (isFocused) {
+        ctx.strokeStyle = cssVar('--c-text-body');
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+
+      // text labels
+      if (!dim || isFocused || isConnected) {
+        ctx.fillStyle = cssVar('--c-text-body');
+        ctx.font = `${isFocused ? 'bold' : 'normal'} ${12 * zoom}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.fillText(n.title, p.x, p.y - (n.r * zoom) - 6);
+      }
+    });
+    ctx.globalAlpha = 1.0;
+  }
+
+  // ---- main loop ----
+  let animating = true;
+  function loop() {
+    if (!reducedMotion) {
+      step();
+      maybeSpawnParticle();
+      particles.forEach((p) => (p.t += p.speed));
+      particles = particles.filter((p) => p.t < 1);
+    }
+    render();
+    if (animating && !reducedMotion) {
+      requestAnimationFrame(loop);
+    }
+  }
+
+  if (!reducedMotion) {
+    requestAnimationFrame(loop);
+  } else {
+    render();
+  }
+</script>

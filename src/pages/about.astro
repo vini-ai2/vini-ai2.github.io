@@ -1,0 +1,79 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="About — Manasvini" active="about">
+
+  <main>
+    <div class="about-layout">
+
+      <h1>About</h1>
+
+      <p class="eyebrow" style="margin-bottom:28px;">
+        Third-year AI &amp; Data Science undergrad at Amrita Vishwa Vidyapeetham, Bengaluru.
+      </p>
+
+      <p>
+        I'm an AI and Data Science student who ends up building whatever's at the intersection
+        of CS, AI, Economics, and Math — real-time vision and control systems, retrieval-augmented
+        LLM applications, and predictive models on data that doesn't want to cooperate. I like
+        domains that break my conceptions of what's "normal."
+      </p>
+
+      <p>
+        I'm also an avid reader, love writing down what I'm learning as I learn it (if you're an
+        ICSE kid, you know exactly what I mean), and basketball gives me better therapy than
+        anything else does.
+      </p>
+
+      <div class="section">
+        <h2>Socials</h2>
+        <ul>
+          <li><a class="panel-link" href="mailto:officialvinik@gmail.com">Email</a></li>
+          <li><a class="panel-link" href="/resume.pdf" target="_blank" rel="noopener">Resume</a></li>
+          <li><a class="panel-link" href="https://github.com/vini-ai2" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a class="panel-link" href="https://www.linkedin.com/in/manasvini-kandikonda/" target="_blank" rel="noopener">LinkedIn</a></li>
+        </ul>
+      </div>
+
+      <div class="hobby-grid">
+
+        <div class="hobby-item stat">
+          <div class="stat-number">
+            <span id="reading-streak-count" data-streak-start="2024-05-21">114</span>
+          </div>
+          <h4>Reading streak</h4>
+          <p>Love reading non-fiction, but I dabble a bit into World Order and economic problems too.</p>
+        </div>
+
+        <div class="hobby-item">
+          <h4>Basketball</h4>
+          <p>
+            As a two-time Karnataka State Captain, and a player on court just for the love of the
+            game, basketball taught me quite a bit about responsibility.
+          </p>
+        </div>
+
+        <div class="hobby-item">
+          <h4>IEEE WIE</h4>
+          <p>
+            Vice Chair of IEEE Women in Engineering — organizing technical talks and coordinating
+            outreach events for 100+ participants a semester.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+</BaseLayout>
+
+<script>
+  document.querySelectorAll('[data-streak-start]').forEach((el) => {
+    const start = new Date((el as HTMLElement).dataset.streakStart!);
+    const now = new Date();
+    const weeks = Math.floor((now.getTime() - start.getTime()) / (7 * 24 * 60 * 60 * 1000));
+    if (!isNaN(weeks) && weeks > 0) el.textContent = String(weeks);
+  });
+</script>

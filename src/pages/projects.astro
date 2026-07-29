@@ -1,0 +1,76 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Projects — Manasvini" active="projects" panelDefaultTitle="Select a project." panelDefaultBody="Each one traces back to a question on the map.">
+
+  <main>
+    <div class="page-hero">
+      <div class="eyebrow">Projects</div>
+      <h1>Things I've built, and why.</h1>
+      <p>Each of these started as a question from the map, not the other way around. Filter by the lens it came from.</p>
+    </div>
+
+    <div class="filters" id="filters"></div>
+    <div class="card-grid" id="project-grid"></div>
+  </main>
+
+</BaseLayout>
+
+<script>
+  import { projects } from '../data/projects.js';
+
+  const grid = document.getElementById('project-grid')!;
+  const filterBar = document.getElementById('filters')!;
+  const categories = ['all', ...new Set(projects.map((p) => p.category))];
+
+  function renderFilters() {
+    filterBar.innerHTML = categories
+      .map((c) => `<button class="filter-pill ${c === 'all' ? 'active' : ''}" data-cat="${c}">${c === 'all' ? 'All' : c}</button>`)
+      .join('');
+
+    filterBar.querySelectorAll('.filter-pill').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        filterBar.querySelectorAll('.filter-pill').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderGrid((btn as HTMLElement).dataset.cat);
+      });
+    });
+  }
+
+  function renderGrid(filter = 'all') {
+    const items = filter === 'all' ? projects : projects.filter((p) => p.category === filter);
+
+    grid.innerHTML = items
+      .map(
+        (p) => `
+        <div class="card" data-id="${p.id}">
+          <div class="tag">${p.category}${p.year ? ' · ' + p.year : ''}</div>
+          <h3>${p.title}</h3>
+          <p>${p.blurb}</p>
+        </div>`
+      )
+      .join('');
+
+    grid.querySelectorAll('.card').forEach((card) => {
+      card.addEventListener('click', () => {
+        const p = projects.find((x) => x.id === (card as HTMLElement).dataset.id)!;
+        const makeList = (window as any).makeList;
+        const openPanel = (window as any).openPanel;
+
+        const stackHtml = p.stack && p.stack.length
+          ? `<div class="stack-row">${p.stack.map((s: string) => `<span class="stack-pill">${s}</span>`).join('')}</div>`
+          : '';
+
+        const linksHtml = p.links && p.links.length
+          ? makeList('Links', p.links.map((l: any) => `<a class="panel-link" href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`))
+          : '';
+
+        openPanel(`<h1>${p.title}</h1><p>${p.description}</p>${stackHtml}${linksHtml}`);
+      });
+    });
+  }
+
+  renderFilters();
+  renderGrid();
+</script>

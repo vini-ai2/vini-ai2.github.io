@@ -1,0 +1,120 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  active: 'map' | 'writing' | 'projects' | 'journey' | 'blog' | 'about';
+  subpage?: boolean;
+  panelDefaultTitle?: string;
+  panelDefaultBody?: string;
+}
+
+const {
+  title,
+  active,
+  subpage = true,
+  panelDefaultTitle = 'Select an item.',
+  panelDefaultBody = 'Details will appear here.'
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+
+  <!-- inline + blocking so theme is set before first paint, no flash -->
+  <script is:inline>
+    (function () {
+      const stored = localStorage.getItem('theme');
+      const theme = stored
+        ? stored
+        : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+</head>
+<body class={subpage ? 'subpage' : ''}>
+
+  <div id="background-grid"></div>
+
+  <header>
+    <div class="logo">Manasvini</div>
+    <nav>
+      <a href="/" class={active === 'map' ? 'active' : ''}>Map</a>
+      <a href="/writing" class={active === 'writing' ? 'active' : ''}>Writing</a>
+      <a href="/projects" class={active === 'projects' ? 'active' : ''}>Projects</a>
+      <a href="/journey" class={active === 'journey' ? 'active' : ''}>Journey</a>
+      <a href="/blog" class={active === 'blog' ? 'active' : ''}>Blog</a>
+      <a href="/about" class={active === 'about' ? 'active' : ''}>About</a>
+      <button id="theme-toggle" aria-label="Toggle light and dark theme"></button>
+    </nav>
+  </header>
+
+  <slot />
+
+  <aside id="panel">
+    <button id="close">×</button>
+    <div id="panel-content">
+      <h1>{panelDefaultTitle}</h1>
+      <p>{panelDefaultBody}</p>
+    </div>
+  </aside>
+
+  <script>
+    const panel = document.getElementById('panel')!;
+    const panelContent = document.getElementById('panel-content')!;
+    const closeBtn = document.getElementById('close')!;
+
+    function makeList(title: string, items?: string[]) {
+      if (!items || !items.length) return '';
+      return `
+        <div class="section">
+          <h2>${title}</h2>
+          <ul>${items.map((item) => `<li>${item}</li>`).join('')}</ul>
+        </div>
+      `;
+    }
+
+    function openPanel(html: string) {
+      panelContent.innerHTML = html;
+      panel.classList.add('open');
+    }
+
+    function closePanel() {
+      panel.classList.remove('open');
+    }
+
+    closeBtn.addEventListener('click', closePanel);
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closePanel();
+    });
+
+    // expose for page-level scripts (astro islands can't easily share module scope across files)
+    (window as any).openPanel = openPanel;
+    (window as any).closePanel = closePanel;
+    (window as any).makeList = makeList;
+  </script>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle') as HTMLButtonElement;
+
+    function currentTheme() {
+      return document.documentElement.getAttribute('data-theme') || 'light';
+    }
+    function setToggleIcon() {
+      themeToggle.textContent = currentTheme() === 'dark' ? '☀' : '☾';
+    }
+    themeToggle.addEventListener('click', () => {
+      const next = currentTheme() === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      setToggleIcon();
+    });
+    setToggleIcon();
+  </script>
+
+</body>
+</html>
