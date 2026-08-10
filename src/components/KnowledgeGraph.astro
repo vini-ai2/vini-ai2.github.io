@@ -211,9 +211,15 @@ Data is imported client-side.
     dragNode = null;
   });
 
-  canvas.addEventListener('click', () => {
+  canvas.addEventListener('click', (e) => {
     if (dragged) return; // was a drag, not a click
-    if (hoverNode) openNodePanel(hoverNode);
+
+    // A click does not necessarily produce a pointermove first (especially on
+    // touch devices), so derive the target from the click itself instead of
+    // relying on the previous hover state.
+    const rect = canvas.getBoundingClientRect();
+    const hit = hitTest(e.clientX - rect.left, e.clientY - rect.top);
+    if (hit) openNodePanel(hit);
   });
 
   function openNodePanel(node: GNode) {
