@@ -2,75 +2,97 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Projects — Manasvini" active="projects" panelDefaultTitle="Select a project." panelDefaultBody="Each one traces back to a question on the map.">
-
-  <main>
+<BaseLayout
+  title="Projects | Manasvini Kandikonda"
+  description="A browsable catalogue of Manasvini Kandikonda's public GitHub projects, research, and technical experiments."
+  active="projects"
+  panelDefaultTitle="Select a project."
+  panelDefaultBody="Open a project to read a summary, technologies, status, and repository link."
+>
+  <main class="projects-page">
     <div class="page-hero">
-      <div class="eyebrow">Projects</div>
-      <h1>Things I've built, and why.</h1>
-      <p>Each of these started as a question from the map, not the other way around. Filter by the lens it came from.</p>
+      <div class="eyebrow">Projects · GitHub catalogue</div>
+      <h1>Things I've built, studied, and explored.</h1>
+      <p>A browsable selection of substantial public repository work, with research, team projects, and coursework labeled in context.</p>
     </div>
 
-    <div class="filters" id="filters"></div>
-    <div class="card-grid" id="project-grid"></div>
-  </main>
+    <section class="catalogue-controls" aria-label="Project catalogue controls">
+      <label class="project-search-label" for="project-search">Search projects</label>
+      <input id="project-search" class="project-search" type="search" autocomplete="off" />
+      <div class="filters" id="filters" role="group" aria-label="Filter projects by category"></div>
+      <p class="catalogue-count" id="catalogue-count" aria-live="polite"></p>
+    </section>
 
+    <div class="card-grid" id="project-grid" aria-live="polite"></div>
+  </main>
 </BaseLayout>
 
 <script>
-  import { projects } from '../data/projects.js';
+  import { projects, projectCategories, repositoryUrl } from '../data/projects.js';
 
   const grid = document.getElementById('project-grid')!;
   const filterBar = document.getElementById('filters')!;
-  const categories = ['all', ...new Set(projects.map((p) => p.category))];
+  const searchInput = document.getElementById('project-search') as HTMLInputElement;
+  const count = document.getElementById('catalogue-count')!;
+  let activeCategory = 'all';
 
   function renderFilters() {
-    filterBar.innerHTML = categories
-      .map((c) => `<button class="filter-pill ${c === 'all' ? 'active' : ''}" data-cat="${c}">${c === 'all' ? 'All' : c}</button>`)
-      .join('');
+    const categories = ['all', ...projectCategories];
+    filterBar.innerHTML = categories.map((category) => {
+      const number = category === 'all' ? projects.length : projects.filter((project) => project.category === category).length;
+      const label = category === 'all' ? 'All projects' : category;
+      return `<button type="button" class="filter-pill ${category === activeCategory ? 'active' : ''}" data-category="${category}" aria-pressed="${category === activeCategory}">${label}<span class="filter-count">${number}</span></button>`;
+    }).join('');
 
-    filterBar.querySelectorAll('.filter-pill').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        filterBar.querySelectorAll('.filter-pill').forEach((b) => b.classList.remove('active'));
-        btn.classList.add('active');
-        renderGrid((btn as HTMLElement).dataset.cat);
+    filterBar.querySelectorAll<HTMLButtonElement>('.filter-pill').forEach((button) => {
+      button.addEventListener('click', () => {
+        activeCategory = button.dataset.category || 'all';
+        renderFilters();
+        renderGrid();
       });
     });
   }
 
-  function renderGrid(filter = 'all') {
-    const items = filter === 'all' ? projects : projects.filter((p) => p.category === filter);
+  function renderGrid() {
+    const query = searchInput.value.trim().toLowerCase();
+    const visibleProjects = projects.filter((project) => {
+      const categoryMatch = activeCategory === 'all' || project.category === activeCategory;
+      const searchable = [project.title, project.category, project.status, project.blurb, project.description, ...project.stack].join(' ').toLowerCase();
+      return categoryMatch && (!query || searchable.includes(query));
+    }).sort((a, b) => Number(Boolean(b.featured)) - Number(Boolean(a.featured)));
 
-    grid.innerHTML = items
-      .map(
-        (p) => `
-        <div class="card" data-id="${p.id}">
-          <div class="tag">${p.category}${p.year ? ' · ' + p.year : ''}</div>
-          <h3>${p.title}</h3>
-          <p>${p.blurb}</p>
-        </div>`
-      )
-      .join('');
+    count.textContent = `${visibleProjects.length} ${visibleProjects.length === 1 ? 'project' : 'projects'}`;
+    if (!visibleProjects.length) {
+      grid.innerHTML = '<p class="empty-projects">No projects match that search. Try another term or category.</p>';
+      return;
+    }
 
-    grid.querySelectorAll('.card').forEach((card) => {
-      card.addEventListener('click', () => {
-        const p = projects.find((x) => x.id === (card as HTMLElement).dataset.id)!;
-        const makeList = (window as any).makeList;
+    grid.innerHTML = visibleProjects.map((project) => `
+      <article class="card project-card ${project.featured ? 'featured' : ''}" data-id="${project.id}">
+        <div class="project-card-meta"><span class="tag">${project.category}</span>${project.status ? `<span class="project-status">${project.status}</span>` : ''}</div>
+        <h2>${project.title}</h2>
+        <p>${project.blurb}</p>
+        <div class="project-stack-preview">${project.stack.slice(0, 4).map((technology) => `<span class="stack-pill">${technology}</span>`).join('')}</div>
+        <div class="project-card-actions">
+          <button class="project-details" type="button" data-details="${project.id}">Details</button>
+          <a class="project-repo" href="${repositoryUrl(project)}" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+        </div>
+      </article>`).join('');
+
+    grid.querySelectorAll<HTMLButtonElement>('[data-details]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const project = projects.find((item) => item.id === button.dataset.details)!;
         const openPanel = (window as any).openPanel;
-
-        const stackHtml = p.stack && p.stack.length
-          ? `<div class="stack-row">${p.stack.map((s: string) => `<span class="stack-pill">${s}</span>`).join('')}</div>`
-          : '';
-
-        const linksHtml = p.links && p.links.length
-          ? makeList('Links', p.links.map((l: any) => `<a class="panel-link" href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`))
-          : '';
-
-        openPanel(`<h1>${p.title}</h1><p>${p.description}</p>${stackHtml}${linksHtml}`);
+        const stackHtml = `<div class="stack-row">${project.stack.map((technology: string) => `<span class="stack-pill">${technology}</span>`).join('')}</div>`;
+        const statusHtml = project.status ? `<p class="project-panel-status">${project.status}</p>` : '';
+        const repo = repositoryUrl(project);
+        const mapHtml = project.mapNode ? `<p class="project-panel-map">Knowledge map: ${project.mapNode}</p>` : '';
+        openPanel(`<h1>${project.title}</h1>${statusHtml}<p>${project.description}</p>${stackHtml}${mapHtml}<div class="section"><h2>Repository</h2><a class="panel-link" href="${repo}" target="_blank" rel="noopener noreferrer">${repo}</a></div>`);
       });
     });
   }
 
+  searchInput.addEventListener('input', renderGrid);
   renderFilters();
   renderGrid();
 </script>

@@ -23,6 +23,31 @@ const items = [
     tags: ['optimization', 'coursework']
   },
   {
+    date: 'Jan 2026 to ongoing', title: 'Finlitter',
+    body: 'Developing a personal finance platform with unit-tested SIP, EMI, compound-interest, and FD calculators, a 1,000-path Monte Carlo simulator, and authentication and encryption features.',
+    tags: ['finance', 'software']
+  },
+  {
+    date: '', title: 'Optimized Gold Nanoparticle Synthesis for Cancer Treatment',
+    body: 'Built a rule engine that compares predicted properties with suitability ranges and maps out-of-range values to fixed, chemist-approved recommendations.',
+    tags: ['materials science', 'machine learning']
+  },
+  {
+    date: '', title: 'Visual-First Residual Correction for 2D-to-3D Facial Reconstruction (DECA)',
+    body: 'Trained a three-layer residual MLP over a frozen DECA backbone, added FAN-generated landmark labels and hard-case-weighted sampling, and ran the corrected model through four real-time webcam pipelines.',
+    tags: ['computer vision', 'pytorch']
+  },
+  {
+    date: 'Dec 2025 to Jan 2026', title: '314e internship',
+    body: 'Built a RAG system for querying patient records with SQL metadata retrieval, semantic chunking, transformer embeddings, vector search, and source-page highlighting.',
+    tags: ['internship', 'machine learning']
+  },
+  {
+    date: '2025 to 2026', title: 'Novo Nordisk hackathon',
+    body: 'Finalist at the Novo Nordisk Hackathon.',
+    tags: ['hackathon']
+  },
+  {
     date: 'Earlier', title: 'xv6-RISC-V — virtual memory, paging & swapping',
     body: "Owned the swap file interface and page fault handler on a team OS project, then went past scope to help finish two teammates' components — a page replacement algorithm and PTE helper functions.",
     tags: ['operating systems', 'c']
@@ -55,7 +80,7 @@ const items = [
 ];
 ---
 
-<BaseLayout title="Journey — Manasvini Kandikonda" active="journey">
+<BaseLayout title="Journey | Manasvini Kandikonda" description="A running log of projects and topics Manasvini Kandikonda has worked on and studied." active="journey">
 
   <main>
     <div class="page-shell">
@@ -66,7 +91,7 @@ const items = [
       <div class="timeline" style="margin-top:52px;">
         {items.map((item) => (
           <div class="tl-item">
-            <div class="tl-date">{item.date}</div>
+            {item.date && <div class="tl-date">{item.date}</div>}
             <h3>{item.title}</h3>
             <p>{item.body}</p>
             <div class="tl-tags tag-row">

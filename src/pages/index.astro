@@ -4,7 +4,7 @@ import VennHero from '../components/VennHero.astro';
 import KnowledgeGraph from '../components/KnowledgeGraph.astro';
 ---
 
-<BaseLayout title="Manasvini" active="map" subpage={false} panelDefaultTitle="Select a node." panelDefaultBody="The website is a map instead of a portfolio.">
+<BaseLayout title="Manasvini Kandikonda | Map" description="Explore Manasvini Kandikonda's interests and projects across computer science, AI, mathematics, and economics." active="map" subpage={false} panelDefaultTitle="Select a node." panelDefaultBody="The website is a map instead of a portfolio.">
 
   <div id="opening">
     <div id="opening-text">
@@ -17,9 +17,33 @@ import KnowledgeGraph from '../components/KnowledgeGraph.astro';
     <div id="intro-space"></div>
     <VennHero />
     <KnowledgeGraph />
+    <nav class="graph-fallback" aria-label="Explore the four lenses">
+      <a href="/projects">Computer Science</a>
+      <a href="/projects">Artificial Intelligence</a>
+      <a href="/projects">Mathematics</a>
+      <a href="/about">Economics</a>
+    </nav>
   </main>
 
 </BaseLayout>
+
+<style>
+  .graph-fallback {
+    position: relative;
+    z-index: 31;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    padding: 24px 80px 48px;
+    background: var(--bg);
+  }
+
+  .graph-fallback a { color: var(--text-secondary); }
+
+  @media (max-width: 900px) {
+    .graph-fallback { padding: 24px; }
+  }
+</style>
 
 <script>
   const opening = document.getElementById('opening')!;

@@ -97,6 +97,7 @@ Data is imported client-side.
   const SPRING_K = 0.02;
   const CENTER_K = 0.012;
   const DAMPING = 0.86;
+  let dragNode: GNode | null = null;
 
   function step() {
     // repulsion
@@ -140,7 +141,6 @@ Data is imported client-side.
   }
 
   // ---- interaction state ----
-  let dragNode: GNode | null = null;
   let hoverNode: GNode | null = null;
   let mouseX = 0, mouseY = 0;
   let dragged = false;

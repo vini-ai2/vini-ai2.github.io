@@ -135,6 +135,13 @@ nav a.active{ color:var(--text); }
   header{ padding:20px 20px; }
 }
 
+@media(max-width:600px){
+  header{ flex-direction:column; gap:8px; padding:10px 12px; }
+  .logo{ font-size:1.55rem; }
+  nav{ width:100%; justify-content:center; flex-wrap:wrap; gap:8px 14px; }
+  nav a{ font-size:.74rem; }
+}
+
 /* ---------------- PANEL ---------------- */
 
 #panel{
@@ -243,7 +250,7 @@ body.subpage{ min-height:100vh; }
 
 .card-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));
   gap:1px;
   background:var(--line);
   border-top:1px solid var(--line);
@@ -267,8 +274,37 @@ body.subpage{ min-height:100vh; }
 .card .tag{ font-size:.75rem; text-transform:uppercase; letter-spacing:.14em; color:var(--muted); }
 .card h3{ font-family:"Instrument Serif",serif; font-size:1.7rem; font-weight:400; }
 .card p{ color:var(--text-secondary); line-height:1.6; font-size:.95rem; flex-grow:1; }
-.card.placeholder{ border:1px dashed var(--line); background:transparent; }
-.card.placeholder:hover{ background:var(--hover-tint); }
+
+/* ---- Projects catalogue ---- */
+
+.catalogue-controls{ padding:0 42px 28px; position:relative; z-index:1; }
+.project-search-label{ display:block; font-size:.78rem; color:var(--muted); margin-bottom:8px; }
+.project-search{
+  width:min(100%,560px); padding:13px 16px; border:1px solid var(--line); border-radius:8px;
+  background:var(--panel-bg); color:var(--text); font:inherit; outline:none; transition:border-color .2s, box-shadow .2s;
+}
+.project-search:focus{ border-color:var(--text-tertiary); box-shadow:0 0 0 3px var(--hover-tint); }
+.catalogue-controls .filters{ padding:22px 0 12px; }
+.filter-pill{ display:inline-flex; align-items:center; gap:10px; }
+.filter-count{ font: .68rem 'JetBrains Mono',monospace; opacity:.72; }
+.catalogue-count{ color:var(--muted); font-size:.78rem; }
+.project-card{ min-height:290px; }
+.project-card.featured{ background:var(--panel-bg); }
+.project-card-meta{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+.project-card .tag{ line-height:1.5; }
+.project-status{ color:var(--text-tertiary); font-size:.7rem; line-height:1.5; text-align:right; }
+.project-card h2{ font-family:"Instrument Serif",serif; font-size:1.8rem; font-weight:400; }
+.project-card-actions{ display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border-soft); padding-top:14px; margin-top:auto; }
+.project-details,.project-repo{ border:0; background:none; color:var(--text-secondary); font:inherit; font-size:.8rem; cursor:pointer; text-decoration:none; }
+.project-details:hover,.project-repo:hover{ color:var(--text); }
+.project-repo{ text-decoration:underline; text-underline-offset:3px; }
+.project-stack-preview{ margin-top:-4px; }
+.project-panel-status,.project-panel-map{ color:var(--text-tertiary); font-size:.8rem; margin:-8px 0 18px; }
+.project-panel-map{ margin:20px 0 0; }
+.empty-projects{ grid-column:1/-1; padding:48px 42px; background:var(--bg); color:var(--text-secondary); }
+
+@media(max-width:900px){ .catalogue-controls{ padding:0 24px 24px; } }
+@media(max-width:600px){ .project-card{ padding:26px 22px; min-height:270px; } .project-card-meta{ display:block; } .project-status{ text-align:left; margin-top:8px; } }
 
 /* ---- about page ---- */
 
@@ -359,7 +395,7 @@ footer a:hover{ color:var(--text); }
 /* HOME — HERO / VENN */
 /* ---------------------------------- */
 
-main{ width:100vw; height:auto; position:relative; z-index:1; }
+main{ width:100%; height:auto; position:relative; z-index:1; }
 
 #intro-space{ height:52vh; }
 
@@ -473,4 +509,16 @@ canvas#graph:active{ cursor:grabbing; }
 
 @media(max-width:900px){
   #graph-intro, #graph-legend, #graph-hint{ left:24px; right:24px; }
+}
+
+@media(max-width:600px){
+  #hero{ height:auto; min-height:100svh; padding:104px 24px 36px; flex-direction:column; justify-content:center; gap:24px; }
+  #intro{ width:100%; }
+  #intro h1{ font-size:clamp(2.2rem,12vw,3.1rem); }
+  #venn-container{ width:min(100%,480px); }
+  #graph-section{ min-height:640px; height:100svh; }
+  #graph-intro{ top:42px; }
+  #graph-intro p{ font-size:.82rem; }
+  #graph-legend{ bottom:70px; left:16px; right:16px; gap:8px 14px; flex-wrap:wrap; font-size:.68rem; }
+  #graph-hint{ bottom:18px; left:16px; right:16px; text-align:left; }
 }

@@ -3,7 +3,8 @@ import '../styles/global.css';
 
 interface Props {
   title: string;
-  active: 'map' | 'writing' | 'projects' | 'journey' | 'blog' | 'about';
+  description?: string;
+  active: 'map' | 'projects' | 'journey' | 'blog' | 'about';
   subpage?: boolean;
   panelDefaultTitle?: string;
   panelDefaultBody?: string;
@@ -11,6 +12,7 @@ interface Props {
 
 const {
   title,
+  description = 'Projects and notes by Manasvini Kandikonda, with an interest in quantitative finance and applied machine learning.',
   active,
   subpage = true,
   panelDefaultTitle = 'Select an item.',
@@ -22,8 +24,16 @@ const {
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content="https://vini-ai2.github.io/og-card.svg" />
+  <meta property="og:url" content={`https://vini-ai2.github.io${Astro.url.pathname}`} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
   <!-- inline + blocking so theme is set before first paint, no flash -->
   <script is:inline>
@@ -44,7 +54,6 @@ const {
     <div class="logo">Manasvini</div>
     <nav>
       <a href="/" class={active === 'map' ? 'active' : ''}>Map</a>
-      <a href="/writing" class={active === 'writing' ? 'active' : ''}>Writing</a>
       <a href="/projects" class={active === 'projects' ? 'active' : ''}>Projects</a>
       <a href="/journey" class={active === 'journey' ? 'active' : ''}>Journey</a>
       <a href="/blog" class={active === 'blog' ? 'active' : ''}>Blog</a>
@@ -67,6 +76,8 @@ const {
     const panel = document.getElementById('panel')!;
     const panelContent = document.getElementById('panel-content')!;
     const closeBtn = document.getElementById('close')!;
+    closeBtn.setAttribute('aria-label', 'Close');
+    closeBtn.textContent = '×';
 
     function makeList(title: string, items?: string[]) {
       if (!items || !items.length) return '';

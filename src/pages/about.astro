@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="About — Manasvini" active="about">
+<BaseLayout title="About | Manasvini Kandikonda" description="About Manasvini Kandikonda, an AI and Data Science student interested in quantitative finance and applied machine learning." active="about">
 
   <main>
     <div class="about-layout">
@@ -10,14 +10,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <h1>About</h1>
 
       <p class="eyebrow" style="margin-bottom:28px;">
-        Third-year AI &amp; Data Science undergrad at Amrita Vishwa Vidyapeetham, Bengaluru.
+        Third-year AI &amp; Data Science undergrad at Amrita Vishwa Vidyapeetham, Bengaluru. CGPA: 8.65 (as of Semester 4).
       </p>
 
       <p>
-        I'm an AI and Data Science student who ends up building whatever's at the intersection
-        of CS, AI, Economics, and Math — real-time vision and control systems, retrieval-augmented
-        LLM applications, and predictive models on data that doesn't want to cooperate. I like
-        domains that break my conceptions of what's "normal."
+        My first interest is quantitative finance. My second is applied machine learning. I also enjoy
+        computer science, mathematics, and economics.
       </p>
 
       <p>
@@ -38,29 +36,26 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
       <div class="hobby-grid">
 
-        <div class="hobby-item stat">
-          <div class="stat-number">
-            <span id="reading-streak-count" data-streak-start="2024-05-21">114</span>
-          </div>
-          <h4>Reading streak</h4>
-          <p>Love reading non-fiction, but I dabble a bit into World Order and economic problems too.</p>
-        </div>
-
         <div class="hobby-item">
           <h4>Basketball</h4>
           <p>
-            As a two-time Karnataka State Captain, and a player on court just for the love of the
-            game, basketball taught me quite a bit about responsibility.
+            Two-time Karnataka State basketball player. Captain of the CISCE Karnataka Basketball Team (2019 to 2020). Led a state team to gold at the Sub-Junior National Basketball tournament.
           </p>
         </div>
 
         <div class="hobby-item">
           <h4>IEEE WIE</h4>
           <p>
-            Vice Chair of IEEE Women in Engineering — organizing technical talks and coordinating
-            outreach events for 100+ participants a semester.
+            Former Vice Chair of IEEE Women in Engineering (July 2025 to August 2026). Organized technical talks with professionals from Oracle, Schneider Electric, JPMC, and IAS officers. Led and coordinated over six technical and outreach events with 1,000+ participants during the 2025 to 2026 academic year.
           </p>
         </div>
+
+        <div class="hobby-item stat">
+          <div class="stat-number">155 weeks</div>
+          <h4>Kindle reading streak</h4>
+          <p>Still going.</p>
+        </div>
+
 
       </div>
 
@@ -68,12 +63,3 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   </main>
 
 </BaseLayout>
-
-<script>
-  document.querySelectorAll('[data-streak-start]').forEach((el) => {
-    const start = new Date((el as HTMLElement).dataset.streakStart!);
-    const now = new Date();
-    const weeks = Math.floor((now.getTime() - start.getTime()) / (7 * 24 * 60 * 60 * 1000));
-    if (!isNaN(weeks) && weeks > 0) el.textContent = String(weeks);
-  });
-</script>
