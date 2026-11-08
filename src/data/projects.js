@@ -1,5 +1,28 @@
 // Public repository catalogue. Descriptions stay close to the README/source
 // evidence; team and maturity notes are shown explicitly where known.
+export const currentProjects = [
+  {
+    id: 'financial-litter-current',
+    title: 'FinLitter',
+    status: 'In progress',
+    description: 'A financial literacy platform covering a range of needs, from budgeting to news that may affect investing. The aim is to make investing and the stock market feel less intimidating and make financial literacy more accessible.',
+    repo: 'Financial_Litter',
+    languages: ['TypeScript', 'CSS'],
+    subprojects: []
+  },
+  {
+    id: 'rover-navigation',
+    title: 'Rover',
+    status: 'Navigation team',
+    description: 'As an active member of the navigation team, I’m working on these sub-projects:',
+    repo: null,
+    subprojects: [
+      { title: 'EKF — Extended Kalman Filter library', description: 'Predicting a favorable next step for the rover.' },
+      { title: 'Nav2 — local and global navigation', description: 'Making local and global environment decisions.' }
+    ]
+  }
+];
+
 export const projects = [
   {
     id: 'finance-controller',
@@ -12,6 +35,7 @@ export const projects = [
       'Reconciles synthetic bank and ledger records using exact and indexed fuzzy matching, then verifies eligible one-to-two settlement groups. An optional LLM pass reviews ambiguous exceptions; the README documents measured results and limitations on the included synthetic batch.',
     stack: ['Python', 'Record linkage', 'Synthetic data', 'LLM review'],
     repo: 'razorpay_buildathon_AI_Finance_Controller',
+    languages: ['Python', 'HTML'],
     mapNode: 'optimization'
   },
   {
@@ -25,6 +49,7 @@ export const projects = [
       'A simulated property appraisal task based on the Ames Housing Dataset. The repository describes an agent environment exposed through the OpenEnv step, reset, and state interface.',
     stack: ['Python', 'OpenEnv', 'Ames Housing Dataset', 'Docker'],
     repo: 'openv_hack',
+    languages: ['Python'],
     mapNode: 'learning'
   },
   {
@@ -38,6 +63,7 @@ export const projects = [
       'Uses Bengaluru parking-violation records, DBSCAN hotspot clustering, temporal features, and a Random Forest feature-importance analysis to rank locations with a Parking-Induced Congestion Risk Index (PICRI). The repository includes analysis code, tables, and a heatmap.',
     stack: ['Python', 'DBSCAN', 'Random Forest', 'Pandas', 'Geospatial analysis'],
     repo: 'Gridlock-Hackathon',
+    languages: ['Python', 'HTML'],
     mapNode: 'optimization'
   },
   {
@@ -51,19 +77,8 @@ export const projects = [
       'A multi-modal speech and text analysis prototype. Its README describes an agent that combines acoustic risk with semantic risk and provides explainable scoring. The repository includes the agent, tools, reports, and UI; no publication status is claimed here.',
     stack: ['Python', 'Speech processing', 'ASR', 'Agent workflows'],
     repo: 'agentic-speech-based-scam-detection',
+    languages: ['Python', 'HTML', 'CSS'],
     mapNode: 'language'
-  },
-  {
-    id: 'small-language-model-security',
-    title: 'Small Language Models for Software Security',
-    category: 'Applied Machine Learning & AI',
-    status: 'Proof of concept',
-    blurb: 'A controlled evaluation of compact local models on vulnerability identification tasks.',
-    description:
-      'Compares local 3B–4B language models on short Python examples: identifying vulnerability status, CWE, affected line, explanation, and a minimal fix. The README describes a 130-example corpus and a Bandit comparison; it explicitly frames this as a proof of concept, not a benchmark.',
-    stack: ['Python', 'Qwen', 'Gemma', 'Phi', 'Ollama', 'Bandit'],
-    repo: 'SLM_demo_for_app_sec',
-    mapNode: 'learning'
   },
   {
     id: 'medical-drug-chatbot',
@@ -75,6 +90,7 @@ export const projects = [
       'The repository source builds prompts from a diagnosis, optional patient information, and follow-up questions, then calls Groq’s Llama 3.1 8B Instant model. Presented as a hackathon prototype; the source does not establish clinical validation.',
     stack: ['Python', 'Streamlit', 'Groq API', 'Llama 3.1'],
     repo: 'Hackathon',
+    languages: ['Python'],
     mapNode: 'language'
   },
   {
@@ -86,6 +102,7 @@ export const projects = [
       'Automates setup for Git Smart HTTP using Nginx, fcgiwrap, and systemd, with a verification script and a post-receive deployment hook. The hook checks out changes and starts an Arduino CLI Teensy build for the configured deployment repository.',
     stack: ['Bash', 'Git Smart HTTP', 'Nginx', 'fcgiwrap', 'systemd', 'Arduino CLI'],
     repo: 'git-server-dummy',
+    languages: ['Shell'],
     mapNode: 'networks'
   },
   {
@@ -98,18 +115,20 @@ export const projects = [
       'A set of image-processing labs with Python source for spatial filters and edge detection, region growing and splitting, Harris corner detection, and Viola–Jones face detection. The repository includes input and generated output images.',
     stack: ['Python', 'OpenCV', 'NumPy', 'Matplotlib'],
     repo: 'Computer-Vision-Amateur',
+    languages: ['Python'],
     mapNode: 'geometry'
   },
   {
     id: 'psychoactive-drug-identification',
-    title: 'The Effects and Classification of Psychoactive Substances',
+    title: 'The Effects and Classification of Psychoactive Substances: A Machine Learning Approach',
     category: 'Data Science & Research',
     status: 'Published paper · CSITSS 2025',
-    blurb: 'A chemical-language modeling project with curated datasets and embedding experiments.',
+    blurb: 'Research on identifying psychoactive substances and classifying their effects.',
     description:
-      'The public repository contains cleaned psychoactive-drug datasets, embedding artifacts, and ChemBERT fine-tuning and transformer experiment directories. The repository contents establish the research work; publication details are not stated on this page.',
-    stack: ['Python', 'ChemBERT', 'Embeddings', 'Transformer fine-tuning'],
+      'Collaborative research on psychoactive substances, published at CSITSS 2025. The research paper is available through IEEE.',
+    stack: ['Machine learning', 'Substance classification'],
     repo: 'LLM-based-identification-of-pyschoactive-drugs',
+    languages: [],
     mapNode: 'learning'
   },
   {
@@ -121,20 +140,8 @@ export const projects = [
       'Implements a QUIC-inspired UDP transport with streams, acknowledgements, retransmission, and flow control. The README also documents X3DH and Double Ratchet sessions, a hybrid classical/post-quantum key exchange mode, and a WebSocket dashboard.',
     stack: ['Go', 'UDP', 'X25519', 'KEM hybrid', 'WebSockets'],
     repo: 'Safe-Chat_QUIC_HTTP3',
+    languages: ['Go', 'HTML', 'JavaScript', 'CSS'],
     mapNode: 'networks'
-  },
-  {
-    id: 'financial-litter',
-    title: 'Financial Litter',
-    category: 'Quantitative Finance & Financial Engineering',
-    featured: true,
-    status: 'In progress · team project',
-    blurb: 'A personal finance platform with tested calculators, a portfolio simulator, and a security layer.',
-    description:
-      'The resume describes an in-progress platform with unit-tested SIP, EMI, compound-interest, and FD calculations; a 1,000-path Monte Carlo simulator for equity, debt, and gold allocations with P10/P50/P90 outcomes; and Argon2id, JWT refresh-token rotation and revocation, rate-limited login, and AES-256-GCM encryption with per-user HKDF-derived keys. The project is described in existing portfolio data as a two-person team effort; individual contribution boundaries are not specified.',
-    stack: ['TypeScript', 'Prisma', 'Monte Carlo simulation', 'Argon2id', 'JWT', 'AES-256-GCM'],
-    repo: 'Financial_Litter',
-    mapNode: 'economics'
   },
   {
     id: 'gold-nanoparticle-synthesis-recommender',
@@ -146,6 +153,7 @@ export const projects = [
       'The resume describes a rule engine that checks predicted nanoparticle size, zeta potential, drug loading, targeting, and cytotoxicity against suitability ranges, then maps deviations to fixed, chemist-approved fixes with mechanistic explanations. It runs on a Keras multi-output model. This is presented as the resume-described contribution in a forked repository; the manuscript is in preparation for journal submission.',
     stack: ['Keras', 'Multi-output models', 'Rule engine', 'Materials science'],
     repo: 'LLM_Optimized_Synth_AuNP',
+    languages: ['Python'],
     mapNode: 'learning'
   },
   {
@@ -158,6 +166,7 @@ export const projects = [
       'The resume describes training a three-layer residual MLP over the frozen DECA backbone, generating landmark labels with a FAN pipeline, and adding hard-case-weighted sampling after fixing a data-loading issue. The corrected model is described as running in real time through four webcam inference pipelines. This entry describes that extension work within a fork of the DECA repository.',
     stack: ['PyTorch', 'DECA', 'FAN', 'Computer vision'],
     repo: 'DECA',
+    languages: ['Python', 'C++', 'CUDA', 'Shell'],
     mapNode: 'geometry'
   },
   {
@@ -170,6 +179,7 @@ export const projects = [
       'A deep-learning assignment using the credit-card fraud dataset. Includes perceptron and multilayer perceptron implementations, threshold comparisons, and experiments combining stratification with class weights. The README discusses precision and recall trade-offs on an imbalanced dataset.',
     stack: ['Python', 'NumPy', 'Perceptron', 'MLP', 'Class weighting'],
     repo: 'DL_Sem4',
+    languages: ['Python'],
     mapNode: 'learning'
   },
   {
@@ -182,6 +192,7 @@ export const projects = [
       'A Jupyter notebook documenting a dimensionality-reduction workflow, including manual PCA concepts and comparison with a scikit-learn PCA result.',
     stack: ['Python', 'Jupyter', 'PCA', 'scikit-learn'],
     repo: 'Dimensionality-Reduction',
+    languages: ['Python'],
     mapNode: 'geometry'
   },
   {
@@ -194,6 +205,7 @@ export const projects = [
       'The repository contains a NumPy Q-network training loop for Gymnasium CartPole and a separate number-guessing environment with reset, step, and state methods exposed through FastAPI. Grouped here as experiments rather than polished standalone products.',
     stack: ['Python', 'NumPy', 'Gymnasium', 'FastAPI', 'Reinforcement learning'],
     repo: 'gibber',
+    languages: ['Python'],
     mapNode: 'learning'
   },
   {
@@ -206,6 +218,7 @@ export const projects = [
       'A collection of solutions covering activations, losses, initialization, normalization, matrix operations, distances, and a vanilla RNN step. The README links each implementation to its TensorTonic problem.',
     stack: ['Python', 'NumPy', 'Machine learning fundamentals'],
     repo: 'TensorTonic-Solutions',
+    languages: ['Python'],
     mapNode: 'learning'
   },
   {
@@ -218,6 +231,7 @@ export const projects = [
       'The repository includes a Python script explicitly labeled as logistic regression trained with Newton’s method, alongside a source directory and data. This entry presents it as course work rather than a standalone research project.',
     stack: ['Python', 'NumPy', 'Logistic regression', 'Newton’s method'],
     repo: 'cs229',
+    languages: ['Python'],
     mapNode: 'learning'
   },
   {
@@ -229,7 +243,8 @@ export const projects = [
     description:
       'The repository contains roughly 800 problem directories and is described as Codeforces solutions written in C++ with a note for each question. Listed in the coursework and experiments category so it remains accessible without taking priority over complete project work.',
     stack: ['C++', 'Algorithms', 'Data structures'],
-    repo: 'competitive-programming'
+    repo: 'competitive-programming',
+    languages: ['C++']
   },
   {
     id: 'technova-endsem',
@@ -240,7 +255,8 @@ export const projects = [
     description:
       'The repository contains HTML, CSS, JavaScript, and image assets for an event site with event and feedback pages. Its README names Manasvini Kandikonda alongside Chirayu Nilesh Chaudhari and Janya Billa as Team 12; this is collaborative work.',
     stack: ['HTML', 'CSS', 'JavaScript'],
-    repo: 'UID-TechNova2026-EndSem'
+    repo: 'UID-TechNova2026-EndSem',
+    languages: ['HTML', 'JavaScript', 'CSS']
   },
   {
     id: 'portfolio-website',
@@ -252,11 +268,13 @@ export const projects = [
       'A static Astro site with a canvas-based knowledge graph, light and dark themes, and a data-driven project catalogue. This page reads project metadata from a JavaScript module and supports category filters and text search.',
     stack: ['Astro', 'JavaScript', 'CSS'],
     repo: 'vini-ai2.github.io',
+    languages: ['Astro', 'JavaScript', 'CSS'],
     mapNode: 'representation'
   }
 ];
 
-export const projectCategories = [...new Set(projects.map((project) => project.category))];
+export const projectCategories = [...new Set(projects.map((project) => project.category))].sort();
+export const projectLanguages = [...new Set(projects.flatMap((project) => project.languages ?? []))].sort();
 
 export function repositoryUrl(project) {
   return `https://github.com/vini-ai2/${project.repo}`;
