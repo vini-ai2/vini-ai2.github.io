@@ -1,24 +1,24 @@
 <section id="hero">
 
   <div id="intro">
-    <h1>This is how I currently partition the world.</h1>
+    <h2>This is how I currently partition the world.</h2>
     <p>Every project, question and obsession begins somewhere inside these four lenses.</p>
   </div>
 
   <div id="venn-container">
     <svg id="venn" viewBox="0 0 1200 900">
 
-      <circle id="cs" class="venn-circle interactive" cx="430" cy="360" r="210" />
-      <circle id="ai" class="venn-circle interactive" cx="630" cy="360" r="210" />
-      <circle id="math" class="venn-circle interactive" cx="530" cy="520" r="210" />
-      <circle id="econ" class="venn-circle interactive" cx="530" cy="210" r="210" />
+      <circle id="cs" class="venn-circle interactive" cx="430" cy="360" r="210" tabindex="0" role="button" aria-label="Computer Science" />
+      <circle id="ai" class="venn-circle interactive" cx="630" cy="360" r="210" tabindex="0" role="button" aria-label="Artificial Intelligence" />
+      <circle id="math" class="venn-circle interactive" cx="530" cy="520" r="210" tabindex="0" role="button" aria-label="Mathematics" />
+      <circle id="econ" class="venn-circle interactive" cx="530" cy="210" r="210" tabindex="0" role="button" aria-label="Economics" />
 
-      <ellipse id="cs-ai" class="intersection" cx="530" cy="360" rx="80" ry="120" />
-      <ellipse id="cs-math" class="intersection" cx="475" cy="445" rx="70" ry="70" />
-      <ellipse id="ai-math" class="intersection" cx="585" cy="445" rx="70" ry="70" />
-      <ellipse id="cs-econ" class="intersection" cx="475" cy="275" rx="70" ry="70" />
-      <ellipse id="ai-econ" class="intersection" cx="585" cy="275" rx="70" ry="70" />
-      <circle id="center" class="intersection" cx="530" cy="360" r="55" />
+      <ellipse id="cs-ai" class="intersection" cx="530" cy="360" rx="80" ry="120" tabindex="0" role="button" aria-label="Building Intelligence" />
+      <ellipse id="cs-math" class="intersection" cx="475" cy="445" rx="70" ry="70" tabindex="0" role="button" aria-label="Algorithms" />
+      <ellipse id="ai-math" class="intersection" cx="585" cy="445" rx="70" ry="70" tabindex="0" role="button" aria-label="Learning Theory" />
+      <ellipse id="cs-econ" class="intersection" cx="475" cy="275" rx="70" ry="70" tabindex="0" role="button" aria-label="Distributed Incentives" />
+      <ellipse id="ai-econ" class="intersection" cx="585" cy="275" rx="70" ry="70" tabindex="0" role="button" aria-label="Decision Making" />
+      <circle id="center" class="intersection" cx="530" cy="360" r="55" tabindex="0" role="button" aria-label="The Questions" />
 
       <text x="160" y="360" class="venn-label">Computer Science</text>
       <text x="160" y="385" class="venn-subtitle">How can this be built?</text>
@@ -96,22 +96,41 @@
     if (!data) return;
     const openPanel = (window as any).openPanel;
     if (!openPanel) return;
-    const topicsHtml = `<ul>${data.topics.map((t) => `<li>${t}</li>`).join('')}</ul>`;
-    openPanel(`<h1>${data.title}</h1><p>${data.desc}</p>${topicsHtml}`);
+    const escapeHtml = (value: string) => value.replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]!);
+    const topicsHtml = `<ul>${data.topics.map((topic) => `<li>${escapeHtml(topic)}</li>`).join('')}</ul>`;
+    openPanel(`<h1>${escapeHtml(data.title)}</h1><p>${escapeHtml(data.desc)}</p>${topicsHtml}`);
   }
 
   vennCircles.forEach((circle) => {
-    circle.addEventListener('mouseenter', () => {
+    function activateLens() {
       vennCircles.forEach((c) => { if (c !== circle) c.classList.add('fade'); });
       showWords(circle.id);
-    });
-    circle.addEventListener('mouseleave', () => {
+    }
+    function deactivateLens() {
       vennCircles.forEach((c) => c.classList.remove('fade'));
       removeWords();
+    }
+    circle.addEventListener('mouseenter', activateLens);
+    circle.addEventListener('focus', activateLens);
+    circle.addEventListener('mouseleave', deactivateLens);
+    circle.addEventListener('blur', deactivateLens);
+    circle.addEventListener('keydown', (event) => {
+      const keyEvent = event as KeyboardEvent;
+      if (keyEvent.key === 'Enter' || keyEvent.key === ' ') {
+        keyEvent.preventDefault();
+        activateLens();
+      }
     });
   });
 
   document.querySelectorAll('.intersection').forEach((region) => {
     region.addEventListener('click', () => showIntersection(region.id));
+    region.addEventListener('keydown', (event) => {
+      const keyEvent = event as KeyboardEvent;
+      if (keyEvent.key === 'Enter' || keyEvent.key === ' ') {
+        keyEvent.preventDefault();
+        showIntersection((region as SVGElement).id);
+      }
+    });
   });
 </script>
