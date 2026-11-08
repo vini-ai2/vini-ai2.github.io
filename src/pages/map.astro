@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import VennHero from '../components/VennHero.astro';
+import KnowledgeGraph from '../components/KnowledgeGraph.astro';
+import { knowledge, lensMeta } from '../data/knowledge.js';
+const byId = new Map(knowledge.map((node) => [node.id, node]));
+---
+<BaseLayout title="Map | Manasvini Kandikonda" description="Explore Manasvini Kandikonda's interests and projects across computer science, AI, mathematics, and economics." active="map" subpage={false} panelDefaultTitle="Select a node." panelDefaultBody="The website is a map instead of a portfolio.">
+  <main id="main-content" class="map-page">
+    <div class="page-hero"><h1>Map</h1></div>
+    <section class="map-explorer" aria-labelledby="map-title">
+      <h2 id="map-title">Explore topics</h2>
+      <p>Search topics, then expand a topic to see its connected topics, projects, writing, and reading.</p>
+      <label class="project-search-label" for="map-search">Search topics</label>
+      <input class="project-search" id="map-search" type="search" autocomplete="off" />
+      <p id="map-results" class="catalogue-count" aria-live="polite"></p>
+      <ul class="topic-list" id="topic-list">
+        {knowledge.map((node) => (
+          <li class="topic-item" id={`topic-${node.id}`} data-search={`${node.title} ${node.description} ${node.categories.map((key) => lensMeta[key].label).join(' ')} ${node.links.map((id) => byId.get(id)?.title || '').join(' ')} ${node.projects.join(' ')} ${node.writing.join(' ')} ${node.reading.join(' ')}`.toLowerCase()}>
+            <details>
+              <summary><span>{node.title}</span><span class="topic-lenses">{node.categories.map((key) => lensMeta[key].label).join(' · ')}</span></summary>
+              <div class="topic-detail">
+                <p>{node.description}</p>
+                <div class="section"><h3>Connected topics</h3><ul>{node.links.map((id) => <li><a href={`#topic-${id}`} data-topic-link={id}>{byId.get(id)?.title}</a></li>)}</ul></div>
+                <div class="section"><h3>Projects</h3><ul>{node.projects.map((entry) => <li>{entry}</li>)}</ul></div>
+                <div class="section"><h3>Writing</h3><ul>{node.writing.map((entry) => <li>{entry}</li>)}</ul></div>
+                <div class="section"><h3>Reading</h3><ul>{node.reading.map((entry) => <li>{entry}</li>)}</ul></div>
+              </div>
+            </details>
+          </li>
+        ))}
+      </ul>
+      <p id="map-empty" class="empty-projects" hidden>No topics match that search.</p>
+    </section>
+    <section aria-label="Visual knowledge map">
+      <VennHero />
+      <KnowledgeGraph />
+      <nav class="graph-fallback" aria-label="Explore the four lenses">
+        <a href="/projects">Computer Science</a><a href="/projects">Artificial Intelligence</a><a href="/projects">Mathematics</a><a href="/about">Economics</a>
+      </nav>
+    </section>
+  </main>
+</BaseLayout>
+<script>
+  const input = document.getElementById('map-search') as HTMLInputElement;
+  const rows = [...document.querySelectorAll<HTMLElement>('.topic-item')];
+  const status = document.getElementById('map-results')!;
+  const empty = document.getElementById('map-empty')!;
+  input.addEventListener('input', () => {
+    const query = input.value.trim().toLowerCase();
+    let visible = 0;
+    rows.forEach((row) => { const match = !query || (row.dataset.search || '').includes(query); row.hidden = !match; if (match) visible++; });
+    status.textContent = `${visible} ${visible === 1 ? 'topic' : 'topics'}`;
+    empty.hidden = visible > 0;
+  });
+  status.textContent = `${rows.length} topics`;
+  document.querySelectorAll<HTMLAnchorElement>('[data-topic-link]').forEach((link) => link.addEventListener('click', (event) => {
+    event.preventDefault();
+    input.value = '';
+    input.dispatchEvent(new Event('input'));
+    const target = document.getElementById(`topic-${link.dataset.topicLink}`)?.querySelector('details');
+    if (target) { target.open = true; target.querySelector('summary')?.focus(); }
+  }));
+</script>
