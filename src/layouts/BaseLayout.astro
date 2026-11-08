@@ -18,15 +18,18 @@ const {
   panelDefaultTitle = 'Select an item.',
   panelDefaultBody = 'Details will appear here.'
 } = Astro.props;
+const quote = "The world has a multitude of perspectives, and it's a feat to find more than a few.";
+const canonicalUrl = new URL(active === 'about' ? '/' : Astro.url.pathname, Astro.site).href;
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>{title}</title>
   <meta name="description" content={description} />
+  <link rel="canonical" href={canonicalUrl} />
   <meta property="og:type" content="website" />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
@@ -34,98 +37,97 @@ const {
   <meta property="og:url" content={`https://vini-ai2.github.io${Astro.url.pathname}`} />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-
-  <!-- inline + blocking so theme is set before first paint, no flash -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Source+Serif+4:wght@400;600&display=swap" rel="stylesheet" />
   <script is:inline>
     (function () {
-      const stored = localStorage.getItem('theme');
-      const theme = stored
-        ? stored
-        : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      let stored = null;
+      try { stored = localStorage.getItem('theme'); } catch {}
+      const theme = stored === 'light' || stored === 'dark' ? stored : 'dark';
       document.documentElement.setAttribute('data-theme', theme);
     })();
   </script>
 </head>
 <body class={subpage ? 'subpage' : ''}>
-
-  <div id="background-grid"></div>
-
+  <div id="background-grid" aria-hidden="true"></div>
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <header>
-    <div class="logo">Manasvini</div>
-    <nav>
-      <a href="/" class={active === 'map' ? 'active' : ''}>Map</a>
-      <a href="/projects" class={active === 'projects' ? 'active' : ''}>Projects</a>
-      <a href="/journey" class={active === 'journey' ? 'active' : ''}>Journey</a>
-      <a href="/blog" class={active === 'blog' ? 'active' : ''}>Blog</a>
-      <a href="/about" class={active === 'about' ? 'active' : ''}>About</a>
-      <button id="theme-toggle" aria-label="Toggle light and dark theme"></button>
+    <a class="logo" href="/" aria-label="Manasvini — About">Manasvini</a>
+    <nav aria-label="Primary navigation">
+      <a href="/" class={active === 'about' ? 'active' : ''} aria-current={active === 'about' ? 'page' : undefined}>About</a>
+      <a href="/projects" class={active === 'projects' ? 'active' : ''} aria-current={active === 'projects' ? 'page' : undefined}>Projects</a>
+      <a href="/journey" class={active === 'journey' ? 'active' : ''} aria-current={active === 'journey' ? 'page' : undefined}>Journey</a>
+      <button id="theme-toggle" aria-label="Toggle light and dark theme" type="button"></button>
     </nav>
   </header>
 
   <slot />
 
-  <aside id="panel">
-    <button id="close">×</button>
-    <div id="panel-content">
-      <h1>{panelDefaultTitle}</h1>
-      <p>{panelDefaultBody}</p>
+  <footer class="site-footer">
+    <p class="footer-quote">{quote}</p>
+    <div class="footer-row">
+      <div class="f-left">© 2026 Manasvini Kandikonda</div>
+      <div class="f-right">
+        <a href="https://github.com/vini-ai2" target="_blank" rel="noopener">GitHub</a> ·
+        <a href="https://www.linkedin.com/in/manasvini-kandikonda" target="_blank" rel="noopener">LinkedIn</a> ·
+        <a href="mailto:officialvinik@gmail.com">Email</a>
+      </div>
     </div>
-  </aside>
+  </footer>
 
+  <aside id="panel" role="dialog" aria-modal="true" aria-labelledby="panel-title" aria-hidden="true">
+    <button id="close" type="button" aria-label="Close">×</button>
+    <div id="panel-content"><h1 id="panel-title">{panelDefaultTitle}</h1><p>{panelDefaultBody}</p></div>
+  </aside>
   <script>
     const panel = document.getElementById('panel')!;
     const panelContent = document.getElementById('panel-content')!;
     const closeBtn = document.getElementById('close')!;
-    closeBtn.setAttribute('aria-label', 'Close');
-    closeBtn.textContent = '×';
-
+    let previousFocus: HTMLElement | null = null;
+    const escapeHtml = (value: string) => value.replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]!);
     function makeList(title: string, items?: string[]) {
       if (!items || !items.length) return '';
-      return `
-        <div class="section">
-          <h2>${title}</h2>
-          <ul>${items.map((item) => `<li>${item}</li>`).join('')}</ul>
-        </div>
-      `;
+      return `<div class="section"><h2>${escapeHtml(title)}</h2><ul>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></div>`;
     }
-
     function openPanel(html: string) {
+      previousFocus = document.activeElement as HTMLElement;
       panelContent.innerHTML = html;
+      panelContent.querySelector('h1')?.setAttribute('id', 'panel-title');
       panel.classList.add('open');
+      panel.setAttribute('aria-hidden', 'false');
+      closeBtn.focus();
     }
-
     function closePanel() {
       panel.classList.remove('open');
+      panel.setAttribute('aria-hidden', 'true');
+      previousFocus?.focus();
     }
-
     closeBtn.addEventListener('click', closePanel);
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closePanel();
+    window.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && panel.classList.contains('open')) closePanel();
+      if (event.key === 'Tab' && panel.classList.contains('open')) {
+        const focusable = panel.querySelectorAll<HTMLElement>('a,button,[tabindex]:not([tabindex="-1"])');
+        const first = focusable[0], last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+      }
     });
-
-    // expose for page-level scripts (astro islands can't easily share module scope across files)
     (window as any).openPanel = openPanel;
     (window as any).closePanel = closePanel;
     (window as any).makeList = makeList;
   </script>
-
   <script>
     const themeToggle = document.getElementById('theme-toggle') as HTMLButtonElement;
-
-    function currentTheme() {
-      return document.documentElement.getAttribute('data-theme') || 'light';
-    }
-    function setToggleIcon() {
-      themeToggle.textContent = currentTheme() === 'dark' ? '☀' : '☾';
-    }
+    function currentTheme() { return document.documentElement.getAttribute('data-theme') || 'light'; }
+    function setToggleIcon() { themeToggle.textContent = currentTheme() === 'dark' ? '☀' : '◐'; }
     themeToggle.addEventListener('click', () => {
       const next = currentTheme() === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('theme', next);
+      try { localStorage.setItem('theme', next); } catch {}
       setToggleIcon();
     });
     setToggleIcon();
   </script>
-
 </body>
 </html>
