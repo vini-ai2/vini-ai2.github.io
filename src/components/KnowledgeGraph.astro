@@ -18,7 +18,7 @@ Data is imported client-side.
   </div>
 
   <div id="graph-canvas-wrap">
-    <canvas id="graph"></canvas>
+    <canvas id="graph" aria-hidden="true"></canvas>
   </div>
 
   <div id="graph-legend">
@@ -226,9 +226,10 @@ Data is imported client-side.
     const makeList = (window as any).makeList;
     const openPanel = (window as any).openPanel;
     if (!openPanel) return;
+    const escapeHtml = (value: string) => value.replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]!);
     openPanel(`
-      <h1>${node.title}</h1>
-      <p>${node.description}</p>
+      <h1>${escapeHtml(node.title)}</h1>
+      <p>${escapeHtml(node.description)}</p>
       ${makeList('Projects', node.projects)}
       ${makeList('Writing', node.writing)}
       ${makeList('Reading', node.reading)}
