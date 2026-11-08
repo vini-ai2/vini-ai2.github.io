@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data, body }) => !data.draft && Boolean(body?.trim()));
+  return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+const words = post.body.replace(/[`*_>#\[\]()!~-]/g, ' ').trim().split(/\s+/).filter(Boolean).length;
+const readingMinutes = Math.max(1, Math.ceil(words / 200));
+---
+<BaseLayout title={`${post.data.title} | Manasvini Kandikonda`} description={post.data.description} active="blog">
+  <main id="main-content" class="page-shell blog-page">
+    <article class="blog-article">
+      <a class="blog-back" href="/blog/">← Blog</a>
+      <p class="blog-category">{post.data.category}</p>
+      <h1 class="page-title">{post.data.title}</h1>
+      <p class="blog-excerpt">{post.data.description}</p>
+      <div class="blog-article-meta">
+        {post.data.pubDate && <time class="blog-date" datetime={post.data.pubDate.toISOString()}>{post.data.pubDate.toLocaleDateString('en', { year: 'numeric', month: 'long', day: 'numeric' })}</time>}
+        <span class="blog-reading-time">{readingMinutes} min read</span>
+      </div>
+      <div class="blog-article-body"><Content /></div>
+      <a class="blog-back blog-back-bottom" href="/blog/">← Back to all writing</a>
+    </article>
+  </main>
+</BaseLayout>

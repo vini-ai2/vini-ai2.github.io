@@ -1,22 +1,23 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog', ({ data, body }) => !data.draft && Boolean(body?.trim())))
+  .sort((a, b) => (b.data.pubDate?.getTime() ?? 0) - (a.data.pubDate?.getTime() ?? 0));
 ---
-
 <BaseLayout title="Blog | Manasvini Kandikonda" description="Blog updates from Manasvini Kandikonda." active="blog">
-  <main>
-    <div class="page-shell blog-status">
-      <div class="eyebrow">Notes</div>
-      <h1 class="page-title">Blog</h1>
-      <p class="lede">Blogs under progress.</p>
-
-      <footer>
-        <div class="f-left">© 2026 Manasvini Kandikonda</div>
-        <div class="f-right">
-          <a href="https://github.com/vini-ai2" target="_blank" rel="noopener">GitHub</a> ·
-          <a href="https://www.linkedin.com/in/manasvini-kandikonda" target="_blank" rel="noopener">LinkedIn</a> ·
-          <a href="mailto:officialvinik@gmail.com">Email</a>
-        </div>
-      </footer>
-    </div>
+  <main id="main-content" class="page-shell blog-status">
+    <div class="eyebrow">Notes</div>
+    <h1 class="page-title">Blog</h1>
+    <p class="lede">Writing on projects, research, and ideas I’m working through.</p>
+    {posts.length ? <section class="writing-list" aria-label="Writing">
+      {posts.map((post) => (
+        <article class="writing-card">
+          <p class="post-meta">{post.data.category}{post.data.pubDate && <> · <time datetime={post.data.pubDate.toISOString()}>{post.data.pubDate.toLocaleDateString('en', { year: 'numeric', month: 'long', day: 'numeric' })}</time></>}</p>
+          <h2><a href={`/blog/${post.slug}/`}>{post.data.title}</a></h2>
+          <p>{post.data.description}</p>
+        </article>
+      ))}
+    </section> : <p class="writing-empty">New writing will appear here.</p>}
   </main>
 </BaseLayout>
